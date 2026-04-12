@@ -8,14 +8,20 @@ use App\Models\Response;
 use App\Models\ResponseAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Throwable;
 
 class SurveyController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('questions.answers')->orderBy('order')->get();
-        $this->normalizePersonalInfoBirthQuestions($categories);
-        return view('survey.index', compact('categories'));
+        try {
+            $categories = Category::with('questions.answers')->orderBy('order')->get();
+            $this->normalizePersonalInfoBirthQuestions($categories);
+            return view('survey.index', compact('categories'));
+        } catch (Throwable $e) {
+            error_log('SURVEY_INDEX_EXCEPTION '.get_class($e).': '.$e->getMessage());
+            throw $e;
+        }
     }
 
     private function normalizePersonalInfoBirthQuestions($categories): void
