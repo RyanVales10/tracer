@@ -20,7 +20,7 @@ class SurveyController extends Controller
             return response(view('survey.index', compact('categories'))->render());
         } catch (Throwable $e) {
             error_log('SURVEY_INDEX_EXCEPTION '.get_class($e).': '.$e->getMessage());
-            return response('Survey page error: '.$e->getMessage(), 500);
+            throw $e;
         }
     }
 
