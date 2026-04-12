@@ -17,10 +17,10 @@ class SurveyController extends Controller
         try {
             $categories = Category::with('questions.answers')->orderBy('order')->get();
             $this->normalizePersonalInfoBirthQuestions($categories);
-            return view('survey.index', compact('categories'));
+            return response(view('survey.index', compact('categories'))->render());
         } catch (Throwable $e) {
             error_log('SURVEY_INDEX_EXCEPTION '.get_class($e).': '.$e->getMessage());
-            throw $e;
+            return response('Survey page error: '.$e->getMessage(), 500);
         }
     }
 
