@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Answer;
 use App\Models\Category;
 use App\Models\Question;
-use App\Models\Answer;
 use App\Models\Response;
 use App\Models\ResponseAnswer;
 use Illuminate\Http\Request;
@@ -15,7 +15,52 @@ class AdminController extends Controller
     public function index()
     {
         $categories = Category::with('questions.answers')->orderBy('order')->get();
-        return view('admin.index', compact('categories'));
+        $previewCategories = $this->buildPreviewCategories($categories);
+
+        return view('admin.index', compact('categories', 'previewCategories'));
+    }
+
+    private function buildPreviewCategories($categories)
+    {
+        $categories = collect($categories)->map(function ($category) {
+            $category = clone $category;
+            $category->setRelation('questions', collect($category->questions)->values());
+            return $category;
+        });
+
+        $personalInfoCategory = $categories->firstWhere('order', 2);
+        if (!$personalInfoCategory) {
+            return $categories;
+        }
+
+        $questions = $personalInfoCategory->questions->sortBy('order')->values();
+        $birthdayQuestion = $questions->firstWhere('text', 'Birthday');
+
+        if (!$birthdayQuestion) {
+            $monthQuestion = $questions->firstWhere('text', 'Month of birth');
+            $yearQuestion = $questions->firstWhere('text', 'Year of birth');
+
+            if ($monthQuestion && $yearQuestion) {
+                $monthQuestion->text = 'Birthday';
+                $monthQuestion->type = 'date';
+                $monthQuestion->placeholder = '';
+                $monthQuestion->setRelation('answers', collect());
+
+                $questions = $questions->reject(fn ($q) => $q->id === $yearQuestion->id)->values();
+                $questions->each(function ($q, $idx) {
+                    $q->order = $idx + 1;
+                });
+            }
+        }
+
+        $ageQuestion = $questions->firstWhere('text', 'Age on last birthday');
+        if ($ageQuestion) {
+            $ageQuestion->placeholder = 'Auto-calculated from birthday';
+        }
+
+        $personalInfoCategory->setRelation('questions', $questions);
+
+        return $categories;
     }
 
     public function responses()

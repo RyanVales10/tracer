@@ -326,22 +326,27 @@
                         <p class="text-sm text-gray-600">This is how the survey will appear to respondents</p>
                     </div>
 
-                    <template x-if="categories.length === 0">
+                    <template x-if="previewCategories.length === 0">
                         <div class="text-center py-12">
                             <svg class="w-16 h-16 mx-auto mb-4 text-gray-400 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             <p class="text-gray-600">No categories or questions to preview</p>
                         </div>
                     </template>
 
+                    <div class="mb-4 text-sm text-gray-600">
+                        <span x-text="previewTotalQuestions"></span>
+                        <span>questions currently visible in the form preview</span>
+                    </div>
+
                     <div class="space-y-8">
-                        <template x-for="(category, catIndex) in categories" :key="category.id">
+                        <template x-for="(category, catIndex) in previewCategories" :key="category.id">
                             <div class="border border-gray-300 rounded-lg p-6">
                                 <div class="mb-6">
                                     <h3 class="text-lg font-semibold mb-1" x-text="'Section ' + (catIndex + 1) + ': ' + category.title"></h3>
                                     <p class="text-sm text-gray-600" x-text="category.description"></p>
                                 </div>
                                 <div class="space-y-6">
-                                    <template x-for="question in category.questions" :key="question.id">
+                                    <template x-for="question in visiblePreviewQuestions(category)" :key="question.id">
                                         <div>
                                             <label class="block text-sm font-medium mb-2">
                                                 <span x-text="question.text"></span>
@@ -413,9 +418,12 @@
 <script>
 function adminApp() {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const previewCategories = @json($previewCategories);
 
     return {
         categories: @json($categories),
+        previewCategories: previewCategories.sort((a, b) => a.order - b.order),
+        previewFormData: {},
         selectedCategory: null,
         activeTab: 'categories',
         isEditingCategory: false,
@@ -428,6 +436,69 @@ function adminApp() {
 
         get totalQuestions() {
             return this.categories.reduce((t, c) => t + c.questions.length, 0);
+        },
+
+        get previewTotalQuestions() {
+            return this.previewCategories.reduce((t, category) => t + this.visiblePreviewQuestions(category).length, 0);
+        },
+
+        visiblePreviewQuestions(category) {
+            if (!category) return [];
+
+            return (category.questions || [])
+                .slice()
+                .sort((a, b) => a.order - b.order)
+                .filter(question => this.isPreviewConditionMet(question));
+        },
+
+        findPreviewQuestionIdByRef(ref) {
+            for (const category of this.previewCategories) {
+                for (const question of category.questions || []) {
+                    if (question.ref === ref) return question.id;
+                }
+            }
+            return null;
+        },
+
+        isPreviewConditionMet(question) {
+            if (question.type === 'repeating_text' && question.repeating_ref) {
+                const refQuestionId = this.findPreviewQuestionIdByRef(question.repeating_ref);
+                if (refQuestionId) {
+                    return Number(this.previewFormData[refQuestionId] || 0) > 0;
+                }
+            }
+
+            const cqid = question.condition_question_id;
+            const op = question.condition_operator;
+            if (!cqid || !op) return true;
+
+            const actual = this.previewFormData[cqid];
+            const val = question.condition_value;
+
+            switch (op) {
+                case 'equals': return actual === val;
+                case 'in': {
+                    if (actual === undefined || actual === null || actual === '') return false;
+
+                    let list = [];
+                    try {
+                        const parsed = JSON.parse(val);
+                        if (Array.isArray(parsed)) {
+                            list = parsed;
+                        }
+                    } catch (_) {
+                        list = String(val || '').split(',').map(v => v.trim()).filter(v => v !== '');
+                    }
+
+                    return list.includes(actual);
+                }
+                case 'notEquals': return actual !== undefined && actual !== '' && actual !== val;
+                case 'notEqualsStrict': return actual !== val;
+                case 'includes': return Array.isArray(actual) && val !== undefined && actual.includes(val);
+                case 'notEmpty': return actual !== undefined && actual !== '' && actual !== null;
+                case 'greaterThan': return Number(actual) > Number(val);
+                default: return true;
+            }
         },
 
         editCategory(category) {
