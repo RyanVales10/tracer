@@ -620,10 +620,26 @@ function surveyApp() {
         },
 
         getRepeatingCount(question) {
-            if (!question.repeating_ref) return 0;
-            const refQuestion = this.visibleQuestions.find(q => q.id === this.findQuestionIdByRef(question.repeating_ref));
-            if (!refQuestion || refQuestion.type !== 'number') return 0;
-            const count = Math.max(0, Math.min(100, parseInt(this.formData[refQuestion.id] || 0)));
+            let sourceQuestionId = null;
+
+            if (question.repeating_ref) {
+                sourceQuestionId = this.findQuestionIdByRef(question.repeating_ref);
+            }
+
+            // Backward-compatible fallback: use the condition question as the count source.
+            if (!sourceQuestionId && question.condition_question_id) {
+                sourceQuestionId = question.condition_question_id;
+            }
+
+            if (!sourceQuestionId) return 0;
+
+            const sourceQuestion = this.categories
+                .flatMap(cat => cat.questions || [])
+                .find(q => q.id === sourceQuestionId);
+
+            if (!sourceQuestion || sourceQuestion.type !== 'number') return 0;
+
+            const count = Math.max(0, Math.min(100, parseInt(this.formData[sourceQuestionId] || 0)));
             return count;
         },
 
