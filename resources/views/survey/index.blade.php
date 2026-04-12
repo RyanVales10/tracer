@@ -257,16 +257,28 @@
 
                                         {{-- Select --}}
                                         <template x-if="question.type === 'select'">
-                                            <select
-                                                class="w-full px-4 py-3 border border-border rounded-lg"
-                                                :value="formData[question.id] || ''"
-                                                @change="formData[question.id] = $event.target.value"
-                                            >
-                                                <option value="">Select an option...</option>
-                                                <template x-for="answer in sortedAnswers(question)" :key="answer.id">
-                                                    <option :value="answer.text" x-text="answer.text" :selected="formData[question.id] === answer.text"></option>
+                                            <div class="space-y-2">
+                                                <select
+                                                    class="w-full px-4 py-3 border border-border rounded-lg"
+                                                    :value="formData[question.id] || ''"
+                                                    @change="onSelectChange(question, $event.target.value)"
+                                                >
+                                                    <option value="">Select an option...</option>
+                                                    <template x-for="answer in sortedAnswers(question)" :key="answer.id">
+                                                        <option :value="answer.text" x-text="answer.text" :selected="formData[question.id] === answer.text || (answerNeedsSpecify(answer.text) && (formData[question.id] || '').startsWith(answer.text + ': '))"></option>
+                                                    </template>
+                                                </select>
+
+                                                <template x-if="getSelectSpecifyLabel(question) && ((formData[question.id] || '') === getSelectSpecifyLabel(question) || (formData[question.id] || '').startsWith(getSelectSpecifyLabel(question) + ': '))">
+                                                    <input
+                                                        type="text"
+                                                        class="w-full md:w-1/2 px-4 py-2 border border-border rounded-lg text-sm"
+                                                        placeholder="Please specify..."
+                                                        :value="(formData[question.id] || '').includes(': ') ? formData[question.id].substring(formData[question.id].indexOf(': ') + 2) : ''"
+                                                        @input="formData[question.id] = getSelectSpecifyLabel(question) + ': ' + $event.target.value"
+                                                    >
                                                 </template>
-                                            </select>
+                                            </div>
                                         </template>
 
                                         {{-- Repeating Text (dynamic based on number from another question) --}}
@@ -408,6 +420,10 @@ function surveyApp() {
             if (question.text === 'Is your current address in the Philippines or abroad?') {
                 this.normalizeAddressFields(value);
             }
+        },
+
+        onSelectChange(question, value) {
+            this.formData[question.id] = value;
         },
 
         onDateChange(question, value) {
@@ -570,6 +586,11 @@ function surveyApp() {
         },
 
         getRadioSpecifyLabel(question) {
+            const specifyAnswer = this.sortedAnswers(question).find(a => this.answerNeedsSpecify(a.text));
+            return specifyAnswer ? specifyAnswer.text : '';
+        },
+
+        getSelectSpecifyLabel(question) {
             const specifyAnswer = this.sortedAnswers(question).find(a => this.answerNeedsSpecify(a.text));
             return specifyAnswer ? specifyAnswer.text : '';
         },
