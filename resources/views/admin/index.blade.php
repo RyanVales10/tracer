@@ -161,7 +161,7 @@
                                             <p class="text-sm text-gray-600" x-text="selectedCategory.description"></p>
                                         </div>
                                         <button
-                                            @click="isEditingQuestion = true; editingQuestionId = null; questionForm = { text: '', type: 'text', required: false, answers: [], placeholder: 'Region XI', help_text: '' }"
+                                            @click="isEditingQuestion = true; editingQuestionId = null; questionForm = { text: '', type: 'text', required: false, answers: [], placeholder: 'Region XI', help_text: '', condition_question_id: '', condition_operator: 'notEmpty', condition_value: '' }"
                                             class="flex items-center gap-2 px-4 py-2 bg-[#003087] text-white rounded-lg text-sm hover:bg-[#002366] transition-colors"
                                         >
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -205,6 +205,43 @@
                                             <div>
                                                 <label class="block text-sm font-medium mb-2">Help Text (optional)</label>
                                                 <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded text-sm" placeholder="Additional guidance for respondents..." x-model="questionForm.help_text">
+                                            </div>
+
+                                            <div class="p-4 bg-white border border-gray-200 rounded-lg space-y-4">
+                                                <div>
+                                                    <h3 class="text-sm font-semibold text-gray-800 mb-1">Visibility Rule</h3>
+                                                    <p class="text-xs text-gray-500">Optional: show this question only when another question meets a condition.</p>
+                                                </div>
+
+                                                <div>
+                                                    <label class="block text-sm font-medium mb-2">Show only if question</label>
+                                                    <select class="w-full px-3 py-2 border border-gray-300 rounded text-sm" x-model="questionForm.condition_question_id">
+                                                        <option value="">No condition</option>
+                                                        <template x-for="candidate in allQuestionsForConditions()" :key="candidate.id">
+                                                            <option :value="candidate.id" x-text="candidate.category_title + ' - ' + candidate.text"></option>
+                                                        </template>
+                                                    </select>
+                                                </div>
+
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium mb-2">Comparison</label>
+                                                        <select class="w-full px-3 py-2 border border-gray-300 rounded text-sm" x-model="questionForm.condition_operator">
+                                                            <option value="equals">Equals</option>
+                                                            <option value="notEquals">Not equals</option>
+                                                            <option value="notEqualsStrict">Not equals (strict)</option>
+                                                            <option value="includes">Includes</option>
+                                                            <option value="in">In list</option>
+                                                            <option value="notEmpty">Is not empty</option>
+                                                            <option value="greaterThan">Greater than</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium mb-2">Value to compare against</label>
+                                                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded text-sm" placeholder="e.g. Philippines, Yes, 18" x-model="questionForm.condition_value">
+                                                    </div>
+                                                </div>
+                                                <p class="text-xs text-gray-500">Tip: use this to hide follow-up questions until a respondent selects a specific answer.</p>
                                             </div>
 
                                             {{-- Answer Options --}}
@@ -279,6 +316,9 @@
                                                             </div>
                                                             <template x-if="question.help_text">
                                                                 <p class="text-xs text-gray-600 mb-2" x-text="question.help_text"></p>
+                                                            </template>
+                                                            <template x-if="question.condition_question_id && question.condition_operator">
+                                                                <p class="text-xs text-blue-700 mb-2" x-text="conditionSummary(question)"></p>
                                                             </template>
                                                             <div class="flex items-center gap-2 text-xs text-gray-500">
                                                                 <span class="capitalize" x-text="question.type"></span>
@@ -438,6 +478,45 @@ function adminApp() {
             return this.categories.reduce((t, c) => t + c.questions.length, 0);
         },
 
+        allQuestionsForConditions() {
+            const currentQuestionId = this.editingQuestionId;
+            return this.categories.flatMap(category =>
+                (category.questions || [])
+                    .slice()
+                    .sort((a, b) => a.order - b.order)
+                    .filter(question => question.id !== currentQuestionId)
+                    .map(question => ({
+                        ...question,
+                        category_title: category.title,
+                    }))
+            );
+        },
+
+        conditionQuestionText(questionId) {
+            for (const category of this.categories) {
+                const found = (category.questions || []).find(question => question.id === questionId);
+                if (found) return found.text;
+            }
+            return '';
+        },
+
+        conditionSummary(question) {
+            const field = this.conditionQuestionText(question.condition_question_id);
+            const opLabels = {
+                equals: 'equals',
+                notEquals: 'does not equal',
+                notEqualsStrict: 'is not exactly',
+                includes: 'includes',
+                in: 'is in',
+                notEmpty: 'is not empty',
+                greaterThan: 'is greater than',
+            };
+
+            const operator = opLabels[question.condition_operator] || question.condition_operator;
+            const value = question.condition_value ? ` ${question.condition_value}` : '';
+            return `Visible only when "${field || 'Unknown question'}" ${operator}${value}`;
+        },
+
         get previewTotalQuestions() {
             return this.previewCategories.reduce((t, category) => t + this.visiblePreviewQuestions(category).length, 0);
         },
@@ -568,6 +647,9 @@ function adminApp() {
                 answers: (question.answers || []).map(a => ({ ...a })),
                 placeholder: question.placeholder || 'Region XI',
                 help_text: question.help_text || '',
+                condition_question_id: question.condition_question_id || '',
+                condition_operator: question.condition_operator || 'notEmpty',
+                condition_value: question.condition_value || '',
             };
             this.isEditingQuestion = true;
         },
@@ -587,6 +669,9 @@ function adminApp() {
                 required: this.questionForm.required,
                 placeholder: this.questionForm.placeholder,
                 help_text: this.questionForm.help_text,
+                condition_question_id: this.questionForm.condition_question_id || null,
+                condition_operator: this.questionForm.condition_question_id ? this.questionForm.condition_operator : null,
+                condition_value: this.questionForm.condition_question_id ? this.questionForm.condition_value : null,
                 order: existingQuestion?.order ?? this.selectedCategory.questions.length + 1,
                 answers: this.questionForm.answers.map((a, i) => ({ text: a.text, order: i + 1 })),
             };
@@ -624,7 +709,7 @@ function adminApp() {
 
             this.isEditingQuestion = false;
             this.editingQuestionId = null;
-            this.questionForm = { text: '', type: 'text', required: false, answers: [], placeholder: 'Region XI', help_text: '' };
+            this.questionForm = { text: '', type: 'text', required: false, answers: [], placeholder: 'Region XI', help_text: '', condition_question_id: '', condition_operator: 'notEmpty', condition_value: '' };
         },
 
         async deleteQuestion(id) {
