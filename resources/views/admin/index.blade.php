@@ -573,7 +573,17 @@ function adminApp() {
                 }
                 case 'notEquals': return actual !== undefined && actual !== '' && actual !== val;
                 case 'notEqualsStrict': return actual !== val;
-                case 'includes': return Array.isArray(actual) && val !== undefined && actual.includes(val);
+                case 'includes': {
+                    if (Array.isArray(actual)) {
+                        return val !== undefined && actual.includes(val);
+                    }
+
+                    if (actual === undefined || actual === null || actual === '') {
+                        return false;
+                    }
+
+                    return String(actual).toLowerCase().includes(String(val ?? '').toLowerCase());
+                }
                 case 'notEmpty': return actual !== undefined && actual !== '' && actual !== null;
                 case 'greaterThan': return Number(actual) > Number(val);
                 default: return true;
