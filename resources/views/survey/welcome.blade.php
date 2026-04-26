@@ -220,12 +220,12 @@
 </style>
 
 <div class="welcome-page min-h-screen px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
-    <div class="page-shell mx-auto max-w-6xl rounded-[2rem] p-0.5 sm:p-1">
+    <div class="page-shell mx-auto max-w-4xl rounded-[2rem] p-0.5 sm:p-1">
     <section class="relative overflow-hidden rounded-[1.75rem] hero-panel text-white">
         <div class="hero-glow-a"></div>
         <div class="hero-glow-b"></div>
 
-        <div class="relative grid gap-8 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1.25fr_0.95fr] lg:items-center lg:px-12 lg:py-14">
+        <div class="relative grid gap-7 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1.15fr_0.9fr] lg:items-center lg:px-12 lg:py-13">
             <div>
                 <div class="badge inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em]">
                     Ateneo de Davao University
@@ -270,7 +270,7 @@
     </section>
 
     <section class="mt-6 pb-8">
-        <div class="grid gap-4 md:grid-cols-3">
+        <div class="grid gap-4 md:grid-cols-2">
             <article class="info-card">
                 <div class="eyebrow">About</div>
                 <h3 class="title-font mt-3 text-2xl font-bold text-main">About This Study</h3>
@@ -288,25 +288,25 @@
                     Please complete it in one sitting if possible.
                 </p>
             </article>
-
-            <article class="info-card">
-                <div class="eyebrow">Incentive</div>
-                <h3 class="title-font mt-3 text-2xl font-bold text-main">Prize Incentive</h3>
-                <p class="mt-2 text-base leading-relaxed text-muted">
-                    Every completed response receives one raffle entry for a chance to win an
-                    <span class="font-bold" style="color: #11243f;">Ateneo Jacket</span>.
-                </p>
-            </article>
         </div>
 
-        <div class="privacy-panel mt-5 rounded-2xl p-5">
-            <p class="text-base leading-relaxed text-muted">
+        <article class="info-card mt-4">
+            <div class="eyebrow">Incentive</div>
+            <h3 class="title-font mt-3 text-2xl font-bold text-main">Prize Incentive</h3>
+            <p class="mt-2 text-base leading-relaxed text-muted">
+                Every completed response receives one raffle entry for a chance to win an
+                <span class="font-bold" style="color: #11243f;">Ateneo Jacket</span>.
+            </p>
+        </article>
+
+        <div class="privacy-panel mt-4 rounded-2xl p-4">
+            <p class="text-sm leading-relaxed text-muted">
                 <span class="font-bold" style="color: #003a8c;">Privacy Note:</span>
                 All responses are collected anonymously and will be used solely for research and institutional improvement purposes.
             </p>
         </div>
 
-        <div class="timeline-shell mt-5">
+        <div class="timeline-shell mt-4">
             <h3 class="title-font text-2xl font-bold text-main">What to Expect</h3>
             <div class="timeline-grid mt-4">
                 <div class="timeline-step">
@@ -337,28 +337,6 @@
                     </div>
                     <p class="mt-2 text-sm text-muted">Review responses and complete your entry.</p>
                 </div>
-            </div>
-        </div>
-
-        <div class="faq-shell mt-5">
-            <h3 class="title-font text-2xl font-bold text-main">Frequently Asked Questions</h3>
-            <div class="mt-4">
-                <details class="faq-item" open>
-                    <summary>Are my answers anonymous?</summary>
-                    <p>Yes. Responses are used for institutional research and reporting, and are handled confidentially.</p>
-                </details>
-                <details class="faq-item">
-                    <summary>Can I pause and continue later?</summary>
-                    <p>Yes. Use Save for Later and keep your resume code so you can continue where you left off.</p>
-                </details>
-                <details class="faq-item">
-                    <summary>How long does the survey take?</summary>
-                    <p>Most alumni complete the survey within 15-20 minutes.</p>
-                </details>
-                <details class="faq-item">
-                    <summary>Who can answer this tracer study?</summary>
-                    <p>It is intended for ADDU alumni who are invited to provide post-graduation outcomes and feedback.</p>
-                </details>
             </div>
         </div>
     </section>
