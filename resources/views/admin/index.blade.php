@@ -3,16 +3,173 @@
 @section('title', 'Admin - Tracer Study')
 
 @section('content')
-<div x-data="adminApp()" x-cloak>
+<style>
+    .admin-shell {
+        --admin-blue: #003087;
+        --admin-blue-deep: #001f57;
+        --admin-gold: #f5b800;
+        --admin-ink: #10233f;
+        --admin-muted: #5a6b86;
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at top left, rgba(0, 48, 135, 0.10), transparent 28%),
+            radial-gradient(circle at bottom right, rgba(245, 184, 0, 0.10), transparent 24%),
+            linear-gradient(180deg, #f5f7fb 0%, #eef3fb 100%);
+    }
+
+    .admin-topbar {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(16, 35, 63, 0.08);
+        box-shadow: 0 8px 24px rgba(16, 35, 63, 0.05);
+    }
+
+    .admin-heading {
+        color: var(--admin-blue);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+    }
+
+    .admin-subtle {
+        color: var(--admin-muted);
+    }
+
+    .admin-back-btn,
+    .admin-tab-btn,
+    .admin-action-btn,
+    .admin-icon-btn {
+        border-radius: 12px;
+        font-weight: 700;
+        transition: all 0.2s ease;
+    }
+
+    .admin-back-btn {
+        background: linear-gradient(90deg, var(--admin-blue) 0%, var(--admin-blue-deep) 100%);
+        color: #fff;
+        box-shadow: 0 10px 22px rgba(0, 48, 135, 0.22);
+    }
+
+    .admin-back-btn:hover {
+        background: linear-gradient(90deg, var(--admin-blue-deep) 0%, #001844 100%);
+    }
+
+    .admin-tab-shell {
+        border-bottom: 1px solid rgba(16, 35, 63, 0.08);
+        background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0));
+    }
+
+    .admin-tab-btn {
+        padding: 1rem 1rem 0.9rem;
+        border-bottom: 3px solid transparent;
+    }
+
+    .admin-tab-btn.active {
+        color: var(--admin-blue);
+        border-bottom-color: var(--admin-gold);
+    }
+
+    .admin-tab-btn.inactive {
+        color: #5d6d82;
+    }
+
+    .admin-tab-btn.inactive:hover {
+        color: var(--admin-blue);
+        border-bottom-color: rgba(0, 48, 135, 0.25);
+    }
+
+    .admin-panel,
+    .admin-card,
+    .admin-empty-state,
+    .question-card {
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(16, 35, 63, 0.10);
+        border-radius: 18px;
+        box-shadow: 0 14px 30px rgba(16, 35, 63, 0.07);
+    }
+
+    .admin-hero {
+        background: linear-gradient(135deg, var(--admin-blue) 0%, #0a4cc1 60%, #1e5bd3 100%);
+        color: white;
+        border-radius: 18px;
+        box-shadow: 0 18px 38px rgba(0, 48, 135, 0.28);
+    }
+
+    .admin-hero .muted {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .admin-section-label {
+        color: var(--admin-blue);
+        font-size: 0.95rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+    }
+
+    .admin-action-btn {
+        background: linear-gradient(90deg, var(--admin-blue) 0%, var(--admin-blue-deep) 100%);
+        color: #fff;
+        box-shadow: 0 10px 20px rgba(0, 48, 135, 0.22);
+    }
+
+    .admin-action-btn:hover {
+        background: linear-gradient(90deg, var(--admin-blue-deep) 0%, #001844 100%);
+    }
+
+    .admin-warning-btn {
+        background: linear-gradient(90deg, #d97706 0%, #b45309 100%);
+        color: #fff;
+    }
+
+    .admin-danger-btn {
+        background: linear-gradient(90deg, #c53030 0%, #9b1c1c 100%);
+        color: #fff;
+    }
+
+    .admin-list-item {
+        border-bottom: 1px solid rgba(16, 35, 63, 0.06);
+        transition: background 0.2s ease;
+    }
+
+    .admin-list-item:hover {
+        background: #f7faff;
+    }
+
+    .admin-list-item.selected {
+        background: linear-gradient(90deg, rgba(0, 48, 135, 0.08), rgba(245, 184, 0, 0.08));
+        border-left: 4px solid var(--admin-blue);
+    }
+
+    .admin-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border-radius: 9999px;
+        padding: 0.35rem 0.7rem;
+        font-size: 0.8rem;
+        font-weight: 800;
+    }
+
+    .admin-badge.blue {
+        background: rgba(0, 48, 135, 0.12);
+        color: var(--admin-blue);
+    }
+
+    .admin-badge.gold {
+        background: rgba(245, 184, 0, 0.18);
+        color: #7a5900;
+    }
+</style>
+
+<div class="admin-shell" x-data="adminApp()" x-cloak>
     {{-- Admin Header --}}
-    <div class="bg-white border-b border-border sticky top-0 z-40">
+    <div class="admin-topbar sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex items-center justify-between gap-4">
                 <div class="flex-1">
-                    <h1 class="text-2xl font-bold text-[#003087]">ADDU Tracer Study Admin</h1>
-                    <p class="text-sm text-muted-foreground mt-1">Manage your survey</p>
+                    <h1 class="admin-heading text-3xl">ADDU Tracer Study Admin</h1>
+                    <p class="admin-subtle text-sm mt-1">Manage your survey with stronger contrast and clearer controls</p>
                 </div>
-                <a href="/" class="flex items-center gap-2 px-4 py-2 bg-[#003087] text-white rounded-lg hover:bg-[#002366] transition-colors whitespace-nowrap">
+                <a href="/" class="admin-back-btn flex items-center gap-2 px-4 py-2 whitespace-nowrap">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     Back to Form
                 </a>
@@ -20,14 +177,14 @@
         </div>
 
         {{-- Navigation Tabs --}}
-        <div class="max-w-7xl mx-auto px-6">
-            <nav class="flex gap-1 -mb-px overflow-x-auto">
+        <div class="admin-tab-shell">
+            <nav class="max-w-7xl mx-auto px-6 flex gap-1 -mb-px overflow-x-auto">
                 <a href="/admin"
-                   class="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors border-[#003087] text-[#003087] whitespace-nowrap">
+                   class="admin-tab-btn active whitespace-nowrap">
                     Dashboard
                 </a>
                 <a href="/admin/responses"
-                   class="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap">
+                   class="admin-tab-btn inactive whitespace-nowrap">
                     Responses
                 </a>
             </nav>
@@ -36,32 +193,35 @@
 
     {{-- Main Content --}}
     <div class="max-w-7xl mx-auto px-6 py-8">
-        <div class="bg-white rounded-lg shadow-sm p-8">
+        <div class="admin-panel p-8">
             {{-- Tracer Study Management Header --}}
-            <div class="bg-gradient-to-br from-[#003087] to-[#0052CC] text-white p-6 rounded-lg shadow-lg mb-6">
-                <h1 class="text-3xl mb-2">Tracer Study Management</h1>
-                <p class="text-white/90">Create and manage survey categories, questions, and answer options</p>
-                <div class="mt-3 flex gap-4 text-sm text-white/80">
-                    <span>📋 <span x-text="categories.length"></span> Categories</span>
-                    <span>•</span>
-                    <span>❓ <span x-text="totalQuestions"></span> Questions</span>
+            <div class="admin-hero p-6 mb-6">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                        <h1 class="text-3xl font-extrabold mb-2">Tracer Study Management</h1>
+                        <p class="muted">Create and manage survey categories, questions, and answer options</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-sm text-white/90">
+                        <span class="admin-badge blue">📋 <span x-text="categories.length"></span> Categories</span>
+                        <span class="admin-badge gold">❓ <span x-text="totalQuestions"></span> Questions</span>
+                    </div>
                 </div>
             </div>
 
             {{-- Tabs --}}
-            <div class="border-b border-gray-200 mb-6">
+            <div class="mb-6 border-b border-slate-200">
                 <div class="flex gap-6">
                     <button
                         @click="activeTab = 'categories'"
-                        :class="activeTab === 'categories' ? 'border-[#003087] text-[#003087]' : 'border-transparent text-gray-600 hover:text-gray-900'"
-                        class="px-4 py-4 font-medium border-b-2 transition-colors"
+                        :class="activeTab === 'categories' ? 'admin-tab-btn active' : 'admin-tab-btn inactive'"
+                        class=""
                     >
                         Manage Categories & Questions
                     </button>
                     <button
                         @click="activeTab = 'preview'"
-                        :class="activeTab === 'preview' ? 'border-[#003087] text-[#003087]' : 'border-transparent text-gray-600 hover:text-gray-900'"
-                        class="px-4 py-4 font-medium border-b-2 transition-colors flex items-center gap-2"
+                        :class="activeTab === 'preview' ? 'admin-tab-btn active' : 'admin-tab-btn inactive'"
+                        class="flex items-center gap-2"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                         Preview Survey
@@ -74,13 +234,13 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {{-- Left Column - Categories --}}
                     <div class="lg:col-span-1">
-                        <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
-                            <div class="p-4 border-b border-gray-200">
+                        <div class="admin-card overflow-hidden">
+                            <div class="p-4 border-b border-slate-200 bg-gradient-to-r from-white to-slate-50">
                                 <div class="flex items-center justify-between mb-4">
-                                    <h2 class="font-semibold">Categories</h2>
+                                    <h2 class="admin-section-label">Categories</h2>
                                     <button
                                         @click="isEditingCategory = true; selectedCategory = null; categoryForm = { title: '', description: '' }"
-                                        class="flex items-center gap-2 px-3 py-2 bg-[#003087] text-white rounded-lg text-sm hover:bg-[#002366] transition-colors"
+                                        class="admin-action-btn flex items-center gap-2 px-3 py-2 text-sm"
                                     >
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                         Add Category
@@ -89,21 +249,21 @@
 
                                 {{-- Category Form --}}
                                 <template x-if="isEditingCategory">
-                                    <div class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-3">
+                                    <div class="mb-4 p-4 rounded-xl space-y-3" style="background: linear-gradient(180deg, rgba(0,48,135,0.06), rgba(245,184,0,0.06)); border: 1px solid rgba(0,48,135,0.14);">
                                         <div>
-                                            <label class="block text-xs font-medium mb-1">Category Title</label>
-                                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded text-sm" placeholder="e.g., Basic Information" x-model="categoryForm.title">
+                                            <label class="block text-xs font-bold mb-1 text-[#10233f]">Category Title</label>
+                                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white" placeholder="e.g., Basic Information" x-model="categoryForm.title">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-medium mb-1">Description</label>
-                                            <textarea class="w-full px-3 py-2 border border-gray-300 rounded text-sm" placeholder="Brief description" rows="2" x-model="categoryForm.description"></textarea>
+                                            <label class="block text-xs font-bold mb-1 text-[#10233f]">Description</label>
+                                            <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white" placeholder="Brief description" rows="2" x-model="categoryForm.description"></textarea>
                                         </div>
                                         <div class="flex gap-2">
-                                            <button @click="saveCategory()" class="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#003087] text-white rounded text-sm hover:bg-[#002366] transition-colors">
+                                            <button @click="saveCategory()" class="admin-action-btn flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
                                                 <span x-text="editingCategoryId ? 'Update' : 'Save'"></span>
                                             </button>
-                                            <button @click="isEditingCategory = false; editingCategoryId = null; categoryForm = { title: '', description: '' }" class="px-3 py-2 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition-colors">
+                                            <button @click="isEditingCategory = false; editingCategoryId = null; categoryForm = { title: '', description: '' }" class="px-3 py-2 bg-slate-200 text-slate-800 rounded-lg text-sm hover:bg-slate-300 transition-colors font-semibold">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                                             </button>
                                         </div>
@@ -112,34 +272,34 @@
                             </div>
 
                             {{-- Category List --}}
-                            <div class="divide-y divide-gray-200 max-h-[600px] overflow-y-auto">
+                            <div class="divide-y divide-slate-200 max-h-[600px] overflow-y-auto">
                                 <template x-if="categories.length === 0">
-                                    <div class="p-8 text-center text-gray-500">
-                                        <svg class="w-12 h-12 mx-auto mb-3 opacity-30 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                        <p class="text-sm">No categories yet</p>
-                                        <p class="text-xs">Click "Add Category" to get started</p>
+                                    <div class="admin-empty-state p-8 text-center">
+                                        <svg class="w-12 h-12 mx-auto mb-3 opacity-30 text-[#003087]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                        <p class="text-sm font-semibold text-[#10233f]">No categories yet</p>
+                                        <p class="text-xs text-[#5a6b86]">Click "Add Category" to get started</p>
                                     </div>
                                 </template>
                                 <template x-for="category in categories" :key="category.id">
                                     <div
-                                        :class="selectedCategory?.id === category.id ? 'bg-blue-50 border-l-4 border-l-[#003087]' : 'hover:bg-gray-50'"
-                                        class="p-4 cursor-pointer transition-colors"
+                                        :class="selectedCategory?.id === category.id ? 'admin-list-item selected' : 'admin-list-item'"
+                                        class="p-4 cursor-pointer"
                                         @click="selectedCategory = category"
                                     >
                                         <div class="flex items-start justify-between gap-2">
                                             <div class="flex items-start gap-3 flex-1">
-                                                <svg class="w-4 h-4 text-gray-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                                                <svg class="w-4 h-4 text-[#003087] mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                                                 <div class="flex-1 min-w-0">
-                                                    <h3 class="font-medium text-sm mb-1" x-text="category.title"></h3>
-                                                    <p class="text-xs text-gray-600 line-clamp-2" x-text="category.description"></p>
-                                                    <p class="text-xs text-gray-500 mt-2" x-text="category.questions.length + ' question' + (category.questions.length !== 1 ? 's' : '')"></p>
+                                                    <h3 class="font-semibold text-sm mb-1 text-[#10233f]" x-text="category.title"></h3>
+                                                    <p class="text-xs text-[#5a6b86] line-clamp-2" x-text="category.description"></p>
+                                                    <p class="text-xs mt-2 text-[#003087] font-semibold" x-text="category.questions.length + ' question' + (category.questions.length !== 1 ? 's' : '')"></p>
                                                 </div>
                                             </div>
                                             <div class="flex gap-1 flex-shrink-0">
-                                                <button @click.stop="editCategory(category)" class="p-1.5 text-blue-600 hover:bg-blue-100 rounded transition-colors">
+                                                <button @click.stop="editCategory(category)" class="admin-icon-btn p-1.5 text-[#003087] hover:bg-blue-100 rounded">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                                 </button>
-                                                <button @click.stop="deleteCategory(category.id)" class="p-1.5 text-red-600 hover:bg-red-100 rounded transition-colors">
+                                                <button @click.stop="deleteCategory(category.id)" class="admin-icon-btn p-1.5 text-red-600 hover:bg-red-100 rounded">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                                 </button>
                                             </div>
@@ -153,16 +313,16 @@
                     {{-- Right Column - Questions --}}
                     <div class="lg:col-span-2">
                         <template x-if="selectedCategory">
-                            <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
-                                <div class="p-4 border-b border-gray-200">
+                            <div class="admin-card overflow-hidden">
+                                <div class="p-4 border-b border-slate-200 bg-gradient-to-r from-white to-slate-50">
                                     <div class="flex items-center justify-between mb-4">
                                         <div>
-                                            <h2 class="font-semibold mb-1" x-text="selectedCategory.title"></h2>
-                                            <p class="text-sm text-gray-600" x-text="selectedCategory.description"></p>
+                                            <h2 class="admin-section-label mb-1" x-text="selectedCategory.title"></h2>
+                                            <p class="text-sm text-[#5a6b86]" x-text="selectedCategory.description"></p>
                                         </div>
                                         <button
                                             @click="isEditingQuestion = true; editingQuestionId = null; questionForm = { text: '', type: 'text', required: false, answers: [], placeholder: 'Region XI', help_text: '', condition_question_id: '', condition_operator: 'notEmpty', condition_value: '' }"
-                                            class="flex items-center gap-2 px-4 py-2 bg-[#003087] text-white rounded-lg text-sm hover:bg-[#002366] transition-colors"
+                                            class="admin-action-btn flex items-center gap-2 px-4 py-2 text-sm"
                                         >
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                             Add Question
@@ -171,15 +331,15 @@
 
                                     {{-- Question Form --}}
                                     <template x-if="isEditingQuestion">
-                                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-4">
+                                        <div class="p-4 rounded-xl space-y-4" style="background: linear-gradient(180deg, rgba(0,48,135,0.06), rgba(245,184,0,0.06)); border: 1px solid rgba(0,48,135,0.14);">
                                             <div>
-                                                <label class="block text-sm font-medium mb-2">Question Text</label>
-                                                <textarea class="w-full px-3 py-2 border border-gray-300 rounded text-sm" placeholder="Enter your question here..." rows="2" x-model="questionForm.text"></textarea>
+                                                <label class="block text-sm font-bold mb-2 text-[#10233f]">Question Text</label>
+                                                <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white" placeholder="Enter your question here..." rows="2" x-model="questionForm.text"></textarea>
                                             </div>
                                             <div class="grid grid-cols-2 gap-4">
                                                 <div>
-                                                    <label class="block text-sm font-medium mb-2">Question Type</label>
-                                                    <select class="w-full px-3 py-2 border border-gray-300 rounded text-sm" x-model="questionForm.type">
+                                                    <label class="block text-sm font-bold mb-2 text-[#10233f]">Question Type</label>
+                                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white" x-model="questionForm.type">
                                                         <option value="text">Short Text</option>
                                                         <option value="textarea">Long Text</option>
                                                         <option value="display">Display Text (No Input)</option>
@@ -199,28 +359,28 @@
                                                 <div class="flex items-end">
                                                     <label class="flex items-center gap-2 cursor-pointer">
                                                         <input type="checkbox" class="w-4 h-4 text-[#003087] rounded" x-model="questionForm.required">
-                                                        <span class="text-sm font-medium">Required Question</span>
+                                                        <span class="text-sm font-bold text-[#10233f]">Required Question</span>
                                                     </label>
                                                 </div>
                                             </div>
                                             <div>
-                                                <label class="block text-sm font-medium mb-2" x-text="questionForm.type === 'display' ? 'Display Text' : 'Placeholder Text (optional)'"></label>
-                                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded text-sm" :placeholder="questionForm.type === 'display' ? 'e.g. Region XI' : 'e.g. Enter your answer here...'" x-model="questionForm.placeholder">
+                                                <label class="block text-sm font-bold mb-2 text-[#10233f]" x-text="questionForm.type === 'display' ? 'Display Text' : 'Placeholder Text (optional)'"></label>
+                                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white" :placeholder="questionForm.type === 'display' ? 'e.g. Region XI' : 'e.g. Enter your answer here...'" x-model="questionForm.placeholder">
                                             </div>
                                             <div>
-                                                <label class="block text-sm font-medium mb-2">Help Text (optional)</label>
-                                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded text-sm" placeholder="Additional guidance for respondents..." x-model="questionForm.help_text">
+                                                <label class="block text-sm font-bold mb-2 text-[#10233f]">Help Text (optional)</label>
+                                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white" placeholder="Additional guidance for respondents..." x-model="questionForm.help_text">
                                             </div>
 
-                                            <div class="p-4 bg-white border border-gray-200 rounded-lg space-y-4">
+                                            <div class="p-4 bg-white border border-gray-200 rounded-xl space-y-4 shadow-sm">
                                                 <div>
-                                                    <h3 class="text-sm font-semibold text-gray-800 mb-1">Visibility Rule</h3>
-                                                    <p class="text-xs text-gray-500">Optional: show this question only when another question meets a condition.</p>
+                                                    <h3 class="text-sm font-extrabold text-[#10233f] mb-1">Visibility Rule</h3>
+                                                    <p class="text-xs text-[#5a6b86]">Optional: show this question only when another question meets a condition.</p>
                                                 </div>
 
                                                 <div>
-                                                    <label class="block text-sm font-medium mb-2">Show only if question</label>
-                                                    <select class="w-full px-3 py-2 border border-gray-300 rounded text-sm" x-model="questionForm.condition_question_id">
+                                                    <label class="block text-sm font-bold mb-2 text-[#10233f]">Show only if question</label>
+                                                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white" x-model="questionForm.condition_question_id">
                                                         <option value="">No condition</option>
                                                         <template x-for="candidate in allQuestionsForConditions()" :key="candidate.id">
                                                             <option :value="candidate.id" x-text="candidate.category_title + ' - ' + candidate.text"></option>
@@ -230,8 +390,8 @@
 
                                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     <div>
-                                                        <label class="block text-sm font-medium mb-2">Comparison</label>
-                                                        <select class="w-full px-3 py-2 border border-gray-300 rounded text-sm" x-model="questionForm.condition_operator">
+                                                        <label class="block text-sm font-bold mb-2 text-[#10233f]">Comparison</label>
+                                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white" x-model="questionForm.condition_operator">
                                                             <option value="equals">Equals</option>
                                                             <option value="notEquals">Not equals</option>
                                                             <option value="notEqualsStrict">Not equals (strict)</option>
@@ -242,19 +402,19 @@
                                                         </select>
                                                     </div>
                                                     <div>
-                                                        <label class="block text-sm font-medium mb-2">Value to compare against</label>
-                                                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded text-sm" placeholder="e.g. Philippines, Yes, 18" x-model="questionForm.condition_value">
+                                                        <label class="block text-sm font-bold mb-2 text-[#10233f]">Value to compare against</label>
+                                                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white" placeholder="e.g. Philippines, Yes, 18" x-model="questionForm.condition_value">
                                                     </div>
                                                 </div>
-                                                <p class="text-xs text-gray-500">Tip: use this to hide follow-up questions until a respondent selects a specific answer.</p>
+                                                <p class="text-xs text-[#5a6b86]">Tip: use this to hide follow-up questions until a respondent selects a specific answer.</p>
                                             </div>
 
                                             {{-- Answer Options --}}
                                             <template x-if="['radio', 'checkbox', 'select'].includes(questionForm.type)">
                                                 <div>
                                                     <div class="flex items-center justify-between mb-2">
-                                                        <label class="block text-sm font-medium">Answer Options</label>
-                                                        <button @click="addAnswerOption()" class="flex items-center gap-1 px-2 py-1 bg-[#003087] text-white rounded text-xs hover:bg-[#002366] transition-colors">
+                                                        <label class="block text-sm font-bold text-[#10233f]">Answer Options</label>
+                                                        <button @click="addAnswerOption()" class="admin-action-btn flex items-center gap-1 px-2 py-1 text-xs">
                                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                                             Add Option
                                                         </button>
@@ -263,43 +423,43 @@
                                                         <template x-for="(answer, idx) in questionForm.answers" :key="idx">
                                                             <div class="flex items-center gap-2">
                                                                 <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                                                                <input type="text" class="flex-1 px-3 py-2 border border-gray-300 rounded text-sm" placeholder="Answer option text" x-model="answer.text">
-                                                                <button @click="questionForm.answers.splice(idx, 1)" class="p-2 text-red-600 hover:bg-red-100 rounded transition-colors">
+                                                                <input type="text" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white" placeholder="Answer option text" x-model="answer.text">
+                                                                <button @click="questionForm.answers.splice(idx, 1)" class="admin-danger-btn p-2 rounded-lg transition-colors">
                                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                                                 </button>
                                                             </div>
                                                         </template>
                                                         <template x-if="questionForm.answers.length === 0">
-                                                            <p class="text-xs text-gray-500 text-center py-3">No answer options yet. Click "Add Option" to create choices.</p>
+                                                            <p class="text-xs text-[#5a6b86] text-center py-3">No answer options yet. Click "Add Option" to create choices.</p>
                                                         </template>
                                                     </div>
                                                 </div>
                                             </template>
 
                                             <div class="flex gap-2">
-                                                <button @click="saveQuestion()" class="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#003087] text-white rounded text-sm hover:bg-[#002366] transition-colors">
+                                                <button @click="saveQuestion()" class="admin-action-btn flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
                                                     <span x-text="editingQuestionId ? 'Update Question' : 'Save Question'"></span>
                                                 </button>
-                                                <button @click="isEditingQuestion = false; editingQuestionId = null" class="px-4 py-2 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition-colors">Cancel</button>
+                                                <button @click="isEditingQuestion = false; editingQuestionId = null" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-lg text-sm hover:bg-slate-300 transition-colors font-semibold">Cancel</button>
                                             </div>
                                         </div>
                                     </template>
                                 </div>
 
                                 {{-- Questions List --}}
-                                <div class="divide-y divide-gray-200 max-h-[600px] overflow-y-auto">
+                                <div class="divide-y divide-slate-200 max-h-[600px] overflow-y-auto">
                                     <template x-if="selectedCategory.questions.length === 0">
-                                        <div class="p-8 text-center text-gray-500">
-                                            <svg class="w-12 h-12 mx-auto mb-3 opacity-30 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                            <p class="text-sm">No questions in this category yet</p>
-                                            <p class="text-xs">Click "Add Question" to get started</p>
+                                        <div class="admin-empty-state p-8 text-center">
+                                            <svg class="w-12 h-12 mx-auto mb-3 opacity-30 text-[#003087]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                            <p class="text-sm font-semibold text-[#10233f]">No questions in this category yet</p>
+                                            <p class="text-xs text-[#5a6b86]">Click "Add Question" to get started</p>
                                         </div>
                                     </template>
                                     <template x-for="(question, index) in selectedCategory.questions.slice().sort((a, b) => a.order - b.order)" :key="question.id">
                                         <div
-                                            class="p-4 hover:bg-gray-50 transition-colors cursor-move"
-                                            :class="draggedQuestionId === question.id ? 'opacity-50 bg-blue-50' : ''"
+                                            class="admin-list-item p-4 cursor-move"
+                                            :class="draggedQuestionId === question.id ? 'opacity-50' : ''"
                                             draggable="true"
                                             @dragstart="onQuestionDragStart(question.id)"
                                             @dragover.prevent
@@ -308,24 +468,24 @@
                                             title="Drag to reorder"
                                         >
                                             <div class="flex items-start gap-3">
-                                                <svg class="w-4 h-4 text-gray-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                                                <svg class="w-4 h-4 text-[#003087] mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                                                 <div class="flex-1 min-w-0">
                                                     <div class="flex items-start gap-2 mb-2">
-                                                        <span class="text-xs font-medium text-gray-500 mt-1" x-text="'Q' + (index + 1)"></span>
+                                                        <span class="text-xs font-extrabold text-[#003087] mt-1" x-text="'Q' + (index + 1)"></span>
                                                         <div class="flex-1">
                                                             <div class="flex items-start gap-2 mb-1">
-                                                                <p class="text-sm flex-1" x-text="question.text"></p>
+                                                                <p class="text-sm flex-1 font-semibold text-[#10233f]" x-text="question.text"></p>
                                                                 <template x-if="question.required">
-                                                                    <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded">Required</span>
+                                                                    <span class="admin-badge" style="background: rgba(197,48,48,0.12); color: #9b1c1c;">Required</span>
                                                                 </template>
                                                             </div>
                                                             <template x-if="question.help_text">
-                                                                <p class="text-xs text-gray-600 mb-2" x-text="question.help_text"></p>
+                                                                <p class="text-xs text-[#5a6b86] mb-2" x-text="question.help_text"></p>
                                                             </template>
                                                             <template x-if="question.condition_question_id && question.condition_operator">
-                                                                <p class="text-xs text-blue-700 mb-2" x-text="conditionSummary(question)"></p>
+                                                                <p class="text-xs text-[#003087] mb-2 font-semibold" x-text="conditionSummary(question)"></p>
                                                             </template>
-                                                            <div class="flex items-center gap-2 text-xs text-gray-500">
+                                                            <div class="flex items-center gap-2 text-xs text-[#5a6b86]">
                                                                 <span class="capitalize" x-text="question.type"></span>
                                                                 <template x-if="question.answers && question.answers.length > 0">
                                                                     <span>
@@ -338,10 +498,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex gap-1 flex-shrink-0">
-                                                    <button @click="editQuestion(question)" class="p-1.5 text-blue-600 hover:bg-blue-100 rounded transition-colors">
+                                                    <button @click="editQuestion(question)" class="admin-icon-btn p-1.5 text-[#003087] hover:bg-blue-100 rounded">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                                     </button>
-                                                    <button @click="deleteQuestion(question.id)" class="p-1.5 text-red-600 hover:bg-red-100 rounded transition-colors">
+                                                    <button @click="deleteQuestion(question.id)" class="admin-icon-btn p-1.5 text-red-600 hover:bg-red-100 rounded">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                                     </button>
                                                 </div>
@@ -353,10 +513,10 @@
                         </template>
 
                         <template x-if="!selectedCategory">
-                            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-12 text-center">
-                                <svg class="w-16 h-16 mx-auto mb-4 text-gray-400 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                <h3 class="text-lg font-medium mb-2">No Category Selected</h3>
-                                <p class="text-sm text-gray-600">Select a category from the left to manage its questions</p>
+                            <div class="admin-empty-state p-12 text-center">
+                                <svg class="w-16 h-16 mx-auto mb-4 text-[#003087] opacity-25" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                <h3 class="text-lg font-extrabold mb-2 text-[#10233f]">No Category Selected</h3>
+                                <p class="text-sm text-[#5a6b86]">Select a category from the left to manage its questions</p>
                             </div>
                         </template>
                     </div>
@@ -367,55 +527,55 @@
             <template x-if="activeTab === 'preview'">
                 <div>
                     <div class="mb-6">
-                        <h2 class="text-xl font-semibold mb-2">Survey Preview</h2>
-                        <p class="text-sm text-gray-600">This is how the survey will appear to respondents</p>
+                        <h2 class="text-2xl font-extrabold mb-2 text-[#10233f]">Survey Preview</h2>
+                        <p class="text-sm text-[#5a6b86]">This is how the survey will appear to respondents</p>
                     </div>
 
                     <template x-if="previewCategories.length === 0">
-                        <div class="text-center py-12">
-                            <svg class="w-16 h-16 mx-auto mb-4 text-gray-400 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                            <p class="text-gray-600">No categories or questions to preview</p>
+                        <div class="admin-empty-state text-center py-12">
+                            <svg class="w-16 h-16 mx-auto mb-4 text-[#003087] opacity-25" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <p class="font-semibold text-[#10233f]">No categories or questions to preview</p>
                         </div>
                     </template>
 
-                    <div class="mb-4 text-sm text-gray-600">
+                    <div class="mb-4 text-sm text-[#5a6b86]">
                         <span x-text="previewTotalQuestions"></span>
                         <span>questions currently visible in the form preview</span>
                     </div>
 
                     <div class="space-y-8">
                         <template x-for="(category, catIndex) in previewCategories" :key="category.id">
-                            <div class="border border-gray-300 rounded-lg p-6">
+                            <div class="admin-card p-6">
                                 <div class="mb-6">
-                                    <h3 class="text-lg font-semibold mb-1" x-text="'Section ' + (catIndex + 1) + ': ' + category.title"></h3>
-                                    <p class="text-sm text-gray-600" x-text="category.description"></p>
+                                    <h3 class="text-xl font-extrabold mb-1 text-[#003087]" x-text="'Section ' + (catIndex + 1) + ': ' + category.title"></h3>
+                                    <p class="text-sm text-[#5a6b86]" x-text="category.description"></p>
                                 </div>
                                 <div class="space-y-6">
                                     <template x-for="question in visiblePreviewQuestions(category)" :key="question.id">
-                                        <div>
-                                            <label class="block text-sm font-medium mb-2">
+                                        <div class="question-card p-4">
+                                            <label class="block text-base font-semibold mb-2 text-[#10233f]">
                                                 <span x-text="question.text"></span>
                                                 <template x-if="question.required && question.type !== 'display'"><span class="text-red-600 ml-1">*</span></template>
                                             </label>
                                             <template x-if="question.help_text">
-                                                <p class="text-xs text-gray-600 mb-2" x-text="question.help_text"></p>
+                                                <p class="text-xs text-[#5a6b86] mb-2" x-text="question.help_text"></p>
                                             </template>
 
                                             <template x-if="question.type === 'display'">
-                                                <div class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700" x-text="question.placeholder || 'Region XI'"></div>
+                                                <div class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-slate-50 text-[#10233f]" x-text="question.placeholder || 'Region XI'"></div>
                                             </template>
 
                                             <template x-if="question.type === 'text'">
-                                                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg" :placeholder="question.placeholder || 'Your answer'" disabled>
+                                                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white" :placeholder="question.placeholder || 'Your answer'" disabled>
                                             </template>
                                             <template x-if="question.type === 'textarea'">
-                                                <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg" :placeholder="question.placeholder || 'Your answer'" rows="3" disabled></textarea>
+                                                <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white" :placeholder="question.placeholder || 'Your answer'" rows="3" disabled></textarea>
                                             </template>
                                             <template x-if="question.type === 'number'">
-                                                <input type="number" class="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg" :placeholder="question.placeholder" disabled>
+                                                <input type="number" class="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg bg-white" :placeholder="question.placeholder" disabled>
                                             </template>
                                             <template x-if="question.type === 'date'">
-                                                <input type="date" class="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg" disabled>
+                                                <input type="date" class="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg bg-white" disabled>
                                             </template>
                                             <template x-if="question.type === 'month'">
                                                 <input type="month" class="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg" disabled>

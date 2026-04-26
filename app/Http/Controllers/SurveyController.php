@@ -12,6 +12,11 @@ use Throwable;
 
 class SurveyController extends Controller
 {
+    public function welcome()
+    {
+        return view('survey.welcome');
+    }
+
     public function index()
     {
         try {
@@ -22,11 +27,6 @@ class SurveyController extends Controller
             error_log('SURVEY_INDEX_EXCEPTION '.get_class($e).': '.$e->getMessage());
             throw $e;
         }
-    }
-
-    public function welcome()
-    {
-        return view('survey.welcome');
     }
 
     private function normalizePersonalInfoBirthQuestions($categories): void
