@@ -29,23 +29,17 @@
 
     .welcome-page .page-shell {
         position: relative;
+        overflow: hidden;
         isolation: isolate;
-    }
-
-    .welcome-page .page-shell::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background:
-            linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(255, 255, 255, 0.68) 100%),
-            linear-gradient(135deg, rgba(0, 58, 140, 0.06) 0%, rgba(255, 255, 255, 0) 60%);
-        border-radius: 2rem;
-        z-index: -1;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(247, 250, 255, 0.98) 100%);
+        box-shadow: 0 24px 50px rgba(0, 42, 99, 0.14);
     }
 
     .welcome-page .hero-panel {
         background: linear-gradient(135deg, #00244f 0%, var(--addu-blue) 52%, var(--addu-blue-bright) 100%);
         border: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom-left-radius: 1.25rem;
+        border-bottom-right-radius: 1.25rem;
         box-shadow: 0 24px 48px rgba(0, 42, 99, 0.28);
     }
 
@@ -125,6 +119,18 @@
     .welcome-page .privacy-panel {
         border: 1px solid #c6d7f4;
         background: linear-gradient(90deg, #eef4ff 0%, #fff7dc 100%);
+    }
+
+    .welcome-page .content-panel {
+        background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+        border-top: 1px solid rgba(214, 225, 243, 0.8);
+    }
+
+    .welcome-page .content-surface {
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid #dbe5f6;
+        border-radius: 1.5rem;
+        box-shadow: 0 12px 26px rgba(17, 36, 63, 0.06);
     }
 
     .welcome-page .text-main {
@@ -220,7 +226,7 @@
 </style>
 
 <div class="welcome-page min-h-screen px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
-    <div class="page-shell mx-auto max-w-4xl rounded-[2rem] p-0.5 sm:p-1">
+    <div class="page-shell mx-auto max-w-4xl rounded-[2rem]">
     <section class="relative overflow-hidden rounded-[1.75rem] hero-panel text-white">
         <div class="hero-glow-a"></div>
         <div class="hero-glow-b"></div>
@@ -269,96 +275,97 @@
         </div>
     </section>
 
-    <section class="mt-6 pb-8">
-        <div class="grid gap-4 md:grid-cols-2">
-            <article class="info-card">
-                <div class="eyebrow">About</div>
-                <h3 class="title-font mt-3 text-2xl font-bold text-main">About This Study</h3>
-                <p class="mt-2 text-base leading-relaxed text-muted">
-                    The tracer study gathers insights on career paths, achievements, and alumni experiences to improve
-                    academic programs and institutional services.
+    <section class="content-panel px-4 pb-6 pt-5 sm:px-5 sm:pb-7">
+        <div class="content-surface p-4 sm:p-5">
+            <div class="grid gap-4 md:grid-cols-2">
+                <article class="info-card">
+                    <div class="eyebrow">About</div>
+                    <h3 class="title-font mt-3 text-xl font-bold text-main sm:text-2xl">About This Study</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-muted sm:text-base">
+                        The tracer study gathers insights on career paths, achievements, and alumni experiences to improve academic programs and institutional services.
+                    </p>
+                </article>
+
+                <article class="info-card">
+                    <div class="eyebrow">Time</div>
+                    <h3 class="title-font mt-3 text-xl font-bold text-main sm:text-2xl">Time Commitment</h3>
+                    <p class="mt-2 text-sm leading-relaxed text-muted sm:text-base">
+                        The survey takes around <span class="font-bold" style="color: #11243f;">15-20 minutes</span>.
+                        Please complete it in one sitting if possible.
+                    </p>
+                </article>
+            </div>
+
+            <article class="info-card mt-4">
+                <div class="eyebrow">Incentive</div>
+                <h3 class="title-font mt-3 text-xl font-bold text-main sm:text-2xl">Prize Incentive</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted sm:text-base">
+                    Every completed response receives one raffle entry for a chance to win an
+                    <span class="font-bold" style="color: #11243f;">Ateneo Jacket</span>.
                 </p>
             </article>
 
-            <article class="info-card">
-                <div class="eyebrow">Time</div>
-                <h3 class="title-font mt-3 text-2xl font-bold text-main">Time Commitment</h3>
-                <p class="mt-2 text-base leading-relaxed text-muted">
-                    The survey takes around <span class="font-bold" style="color: #11243f;">15-20 minutes</span>.
-                    Please complete it in one sitting if possible.
+            <div class="privacy-panel mt-4 rounded-2xl p-4">
+                <p class="text-sm leading-relaxed text-muted">
+                    <span class="font-bold" style="color: #003a8c;">Privacy Note:</span>
+                    All responses are collected anonymously and will be used solely for research and institutional improvement purposes.
                 </p>
-            </article>
-        </div>
+            </div>
 
-        <article class="info-card mt-4">
-            <div class="eyebrow">Incentive</div>
-            <h3 class="title-font mt-3 text-2xl font-bold text-main">Prize Incentive</h3>
-            <p class="mt-2 text-base leading-relaxed text-muted">
-                Every completed response receives one raffle entry for a chance to win an
-                <span class="font-bold" style="color: #11243f;">Ateneo Jacket</span>.
-            </p>
-        </article>
-
-        <div class="privacy-panel mt-4 rounded-2xl p-4">
-            <p class="text-sm leading-relaxed text-muted">
-                <span class="font-bold" style="color: #003a8c;">Privacy Note:</span>
-                All responses are collected anonymously and will be used solely for research and institutional improvement purposes.
-            </p>
-        </div>
-
-        <div class="timeline-shell mt-4">
-            <h3 class="title-font text-2xl font-bold text-main">What to Expect</h3>
-            <div class="timeline-grid mt-4">
-                <div class="timeline-step">
-                    <div class="flex items-center gap-2">
-                        <span class="step-dot">1</span>
-                        <p class="font-bold text-main">Identification</p>
+            <div class="timeline-shell mt-4">
+                <h3 class="title-font text-2xl font-bold text-main">What to Expect</h3>
+                <div class="timeline-grid mt-4">
+                    <div class="timeline-step">
+                        <div class="flex items-center gap-2">
+                            <span class="step-dot">1</span>
+                            <p class="font-bold text-main">Identification</p>
+                        </div>
+                        <p class="mt-2 text-sm text-muted">Provide contact and basic profile details.</p>
                     </div>
-                    <p class="mt-2 text-sm text-muted">Provide contact and basic profile details.</p>
-                </div>
-                <div class="timeline-step">
-                    <div class="flex items-center gap-2">
-                        <span class="step-dot">2</span>
-                        <p class="font-bold text-main">Background</p>
+                    <div class="timeline-step">
+                        <div class="flex items-center gap-2">
+                            <span class="step-dot">2</span>
+                            <p class="font-bold text-main">Background</p>
+                        </div>
+                        <p class="mt-2 text-sm text-muted">Share education and personal background data.</p>
                     </div>
-                    <p class="mt-2 text-sm text-muted">Share education and personal background data.</p>
-                </div>
-                <div class="timeline-step">
-                    <div class="flex items-center gap-2">
-                        <span class="step-dot">3</span>
-                        <p class="font-bold text-main">Career & Feedback</p>
+                    <div class="timeline-step">
+                        <div class="flex items-center gap-2">
+                            <span class="step-dot">3</span>
+                            <p class="font-bold text-main">Career & Feedback</p>
+                        </div>
+                        <p class="mt-2 text-sm text-muted">Tell us about work outcomes and ADDU relevance.</p>
                     </div>
-                    <p class="mt-2 text-sm text-muted">Tell us about work outcomes and ADDU relevance.</p>
-                </div>
-                <div class="timeline-step">
-                    <div class="flex items-center gap-2">
-                        <span class="step-dot">4</span>
-                        <p class="font-bold text-main">Submit</p>
+                    <div class="timeline-step">
+                        <div class="flex items-center gap-2">
+                            <span class="step-dot">4</span>
+                            <p class="font-bold text-main">Submit</p>
+                        </div>
+                        <p class="mt-2 text-sm text-muted">Review responses and complete your entry.</p>
                     </div>
-                    <p class="mt-2 text-sm text-muted">Review responses and complete your entry.</p>
                 </div>
             </div>
-        </div>
 
-        <div class="faq-shell mt-4">
-            <h3 class="title-font text-2xl font-bold text-main">Frequently Asked Questions</h3>
-            <div class="mt-4">
-                <details class="faq-item" open>
-                    <summary>Are my answers anonymous?</summary>
-                    <p>Yes. Responses are used for institutional research and reporting, and are handled confidentially.</p>
-                </details>
-                <details class="faq-item">
-                    <summary>Can I pause and continue later?</summary>
-                    <p>Yes. Use Save for Later and keep your resume code so you can continue where you left off.</p>
-                </details>
-                <details class="faq-item">
-                    <summary>How long does the survey take?</summary>
-                    <p>Most alumni complete the survey within 15-20 minutes.</p>
-                </details>
-                <details class="faq-item">
-                    <summary>Who can answer this tracer study?</summary>
-                    <p>It is intended for ADDU alumni who are invited to provide post-graduation outcomes and feedback.</p>
-                </details>
+            <div class="faq-shell mt-4">
+                <h3 class="title-font text-2xl font-bold text-main">Frequently Asked Questions</h3>
+                <div class="mt-4">
+                    <details class="faq-item" open>
+                        <summary>Are my answers anonymous?</summary>
+                        <p>Yes. Responses are used for institutional research and reporting, and are handled confidentially.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Can I pause and continue later?</summary>
+                        <p>Yes. Use Save for Later and keep your resume code so you can continue where you left off.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>How long does the survey take?</summary>
+                        <p>Most alumni complete the survey within 15-20 minutes.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Who can answer this tracer study?</summary>
+                        <p>It is intended for ADDU alumni who are invited to provide post-graduation outcomes and feedback.</p>
+                    </details>
+                </div>
             </div>
         </div>
     </section>
