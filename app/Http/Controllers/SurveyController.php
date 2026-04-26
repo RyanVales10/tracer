@@ -24,6 +24,11 @@ class SurveyController extends Controller
         }
     }
 
+    public function welcome()
+    {
+        return view('survey.welcome');
+    }
+
     private function normalizePersonalInfoBirthQuestions($categories): void
     {
         $personalInfoCategory = $categories->firstWhere('order', 2);

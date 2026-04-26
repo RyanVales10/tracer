@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:psgc.gitlab.io)",
+      "WebFetch(domain:ph-locations-api.buonzz.com)"
+    ]
+  }
+}

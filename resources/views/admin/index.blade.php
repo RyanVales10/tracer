@@ -189,6 +189,11 @@
                                                         <option value="number">Number</option>
                                                         <option value="date">Date</option>
                                                         <option value="month">Month/Year</option>
+                                                        <option value="country_select">Country Dropdown (API)</option>
+                                                        <option value="region_select">Region (PSGC)</option>
+                                                        <option value="province_select">Province (PSGC)</option>
+                                                        <option value="municipality_select">Municipality / City (PSGC)</option>
+                                                        <option value="barangay_select">Barangay (PSGC)</option>
                                                     </select>
                                                 </div>
                                                 <div class="flex items-end">
@@ -442,6 +447,21 @@
                                                         <option x-text="answer.text"></option>
                                                     </template>
                                                 </select>
+                                            </template>
+                                            <template x-if="question.type === 'country_select'">
+                                                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Search for a country..." disabled>
+                                            </template>
+                                            <template x-if="question.type === 'region_select'">
+                                                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Search for a region..." disabled>
+                                            </template>
+                                            <template x-if="question.type === 'province_select'">
+                                                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Search for a province..." disabled>
+                                            </template>
+                                            <template x-if="question.type === 'municipality_select'">
+                                                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Search for a municipality/city..." disabled>
+                                            </template>
+                                            <template x-if="question.type === 'barangay_select'">
+                                                <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Search for a barangay..." disabled>
                                             </template>
                                         </div>
                                     </template>

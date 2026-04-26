@@ -3,18 +3,124 @@
 @section('title', 'ADDU Alumni Tracer Study')
 
 @section('content')
+<style>
+    .nav-footer {
+        background: linear-gradient(90deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+        border-top: 1px solid #475569;
+    }
+
+    .nav-btn-base {
+        color: #ffffff;
+        font-weight: 600;
+        border-radius: 0.75rem;
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.28);
+    }
+
+    .nav-btn-prev {
+        background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
+        border-color: #334155;
+    }
+
+    .nav-btn-prev:hover {
+        background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
+    }
+
+    .nav-btn-save {
+        background: linear-gradient(90deg, #92400e 0%, #7c2d12 100%);
+        border-color: #78350f;
+    }
+
+    .nav-btn-save:hover {
+        background: linear-gradient(90deg, #78350f 0%, #6b210a 100%);
+    }
+
+    .nav-btn-next {
+        background: linear-gradient(90deg, #1e3a8a 0%, #1e40af 100%);
+        border-color: #1d4ed8;
+    }
+
+    .nav-btn-next:hover {
+        background: linear-gradient(90deg, #1e40af 0%, #1d4ed8 100%);
+    }
+
+    .nav-btn-disabled {
+        background: #334155 !important;
+        border-color: #475569 !important;
+        color: #94a3b8 !important;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+        cursor: not-allowed;
+    }
+
+    .nav-btn-icon {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.28);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+    }
+</style>
 <div x-data="surveyApp()" x-cloak>
     {{-- ── Survey Form ── --}}
-    <div class="min-h-screen bg-gray-50 pb-24">
+    <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
             {{-- Header --}}
             <div class="bg-white border-b border-border sticky top-0 z-40">
-                <div class="max-w-4xl mx-auto px-6 py-4">
+                <div class="max-w-4xl mx-auto px-6 py-6">
                     <div class="flex items-center justify-between gap-4">
                         <div class="flex-1">
                             <h1 class="text-2xl font-bold text-[#003087]">ADDU Alumni Tracer Study</h1>
                             <p class="text-sm text-muted-foreground mt-1">
                                 <span x-text="'Section ' + currentSection + ' of ' + totalSections"></span>
                             </p>
+                            {{-- Section Status Indicators --}}
+                            <div class="flex items-center gap-2 mt-3">
+                                <template x-for="(category, index) in categories" :key="category.id">
+                                    <div class="flex items-center gap-2">
+                                        <div
+                                            class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-200"
+                                            :class="{
+                                                'bg-[#003087] text-white': index + 1 === currentSection,
+                                                'bg-green-500 text-white': index + 1 < currentSection,
+                                                'bg-gray-200 text-gray-500': index + 1 > currentSection
+                                            }"
+                                        >
+                                            <template x-if="index + 1 < currentSection">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                                </svg>
+                                            </template>
+                                            <template x-if="index + 1 === currentSection">
+                                                <span x-text="index + 1"></span>
+                                            </template>
+                                            <template x-if="index + 1 > currentSection">
+                                                <span x-text="index + 1"></span>
+                                            </template>
+                                        </div>
+                                        <span
+                                            class="text-xs font-medium hidden sm:inline"
+                                            :class="{
+                                                'text-[#003087]': index + 1 === currentSection,
+                                                'text-green-600': index + 1 < currentSection,
+                                                'text-gray-400': index + 1 > currentSection
+                                            }"
+                                            x-text="category.title"
+                                        ></span>
+                                    </div>
+                                    <template x-if="index + 1 < categories.length">
+                                        <div
+                                            class="w-4 h-0.5 transition-colors duration-200"
+                                            :class="{
+                                                'bg-[#003087]': index + 1 < currentSection,
+                                                'bg-gray-200': index + 1 >= currentSection
+                                            }"
+                                        ></div>
+                                    </template>
+                                </template>
+                            </div>
                         </div>
                         <div class="w-full max-w-xs">
                             <div class="survey-progress-shell">
@@ -34,10 +140,10 @@
                                 Resume
                             </button>
                         </template>
-                        <a href="/admin" class="flex items-center gap-2 px-4 py-2 bg-[#003087] text-white rounded-lg hover:bg-blue-900 transition-colors whitespace-nowrap">
+                        <button @click="showLogin = true" class="flex items-center gap-2 px-4 py-2 bg-[#003087] text-white rounded-lg hover:bg-blue-900 transition-colors whitespace-nowrap">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
                             Admin
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -74,6 +180,68 @@
                 </div>
             </template>
 
+            {{-- Admin Login Modal --}}
+            <template x-if="showLogin">
+                <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+                        <div class="px-8 py-8">
+                            <div class="flex items-center justify-between mb-6">
+                                <div>
+                                    <h3 class="text-xl font-semibold text-[#003087]">Admin Login</h3>
+                                    <p class="text-sm text-gray-500 mt-1">Sign in to access the admin dashboard.</p>
+                                </div>
+                                <button @click="showLogin = false" class="p-1 hover:bg-gray-100 rounded-lg">
+                                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </button>
+                            </div>
+
+                            @if ($errors->any())
+                            <div class="mb-5 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                                <ul class="space-y-1">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+
+                            <form method="POST" action="{{ route('login') }}" class="space-y-5">
+                                @csrf
+                                <div>
+                                    <label for="admin_email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <input
+                                        id="admin_email"
+                                        name="email"
+                                        type="email"
+                                        value="{{ old('email') }}"
+                                        required
+                                        autofocus
+                                        class="w-full rounded-xl border border-[#e3e3e0] bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-[#003087] focus:ring-2 focus:ring-[#003087]/20"
+                                    >
+                                </div>
+                                <div>
+                                    <label for="admin_password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                    <input
+                                        id="admin_password"
+                                        name="password"
+                                        type="password"
+                                        required
+                                        class="w-full rounded-xl border border-[#e3e3e0] bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-[#003087] focus:ring-2 focus:ring-[#003087]/20"
+                                    >
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-gray-600">
+                                    <input type="checkbox" id="admin_remember" name="remember" class="h-4 w-4 rounded border-gray-300 text-[#003087] focus:ring-[#003087]">
+                                    <label for="admin_remember">Remember me</label>
+                                </div>
+                                <button type="submit" class="w-full rounded-xl bg-[#003087] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#002366]">
+                                    Sign in
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
             {{-- Saved Banner --}}
             <template x-if="showSavedBanner && resumeCode">
                 <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
@@ -96,170 +264,218 @@
             </template>
 
             {{-- Main Content --}}
-            <div class="max-w-4xl mx-auto px-6 py-8">
-                <div class="bg-white rounded-lg shadow-sm p-8">
+            <div class="max-w-4xl mx-auto px-6 py-8 pb-32">
+                <div class="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 rounded-2xl shadow-xl border border-white/50 backdrop-blur-sm overflow-hidden">
                     <template x-if="currentCategory">
-                        <div class="space-y-8">
+                        <div class="space-y-8 p-8 lg:p-10">
                             {{-- Edit mode banner --}}
                             <template x-if="isEditMode && currentSection === 1">
-                                <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                                    <p class="text-sm text-blue-800">
-                                        <strong>Editing mode:</strong> You have already submitted this survey. You can review and update your answers below.
-                                    </p>
+                                <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl shadow-sm">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-blue-800">Editing Mode</p>
+                                            <p class="text-sm text-blue-700">You have already submitted this survey. You can review and update your answers below.</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </template>
 
                             {{-- Section Header --}}
-                            <div>
-                                <h2 class="mb-2" x-text="'SECTION ' + currentSection + ': ' + currentCategory.title.toUpperCase()"></h2>
-                                <p class="text-muted-foreground" x-text="currentCategory.description"></p>
+                            <div class="relative">
+                                <div class="absolute inset-0 bg-gradient-to-r from-[#003087]/5 to-blue-500/5 rounded-xl"></div>
+                                <div class="relative bg-white/80 backdrop-blur-sm border border-white/50 rounded-xl p-6 shadow-lg">
+                                    <div class="flex items-center gap-4 mb-4">
+                                        <div class="w-12 h-12 bg-gradient-to-br from-[#003087] to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                                            <span class="text-white font-bold text-lg" x-text="currentSection"></span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h2 class="text-2xl font-bold text-gray-900 mb-1" x-text="'SECTION ' + currentSection + ': ' + currentCategory.title.toUpperCase()"></h2>
+                                            <div class="w-16 h-1 bg-gradient-to-r from-[#003087] to-blue-500 rounded-full"></div>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-600 leading-relaxed text-lg" x-text="currentCategory.description"></p>
+                                </div>
                             </div>
 
                             {{-- Questions --}}
                             <template x-if="visibleQuestions.length === 0">
-                                <div class="text-center py-8">
-                                    <svg class="w-12 h-12 mx-auto mb-3 text-gray-400 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                    <p class="text-sm text-muted-foreground">No questions in this section yet.</p>
+                                <div class="text-center py-12">
+                                    <div class="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                                        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                        </svg>
+                                    </div>
+                                    <p class="text-gray-500 text-lg font-medium">No questions in this section yet.</p>
+                                    <p class="text-gray-400 text-sm mt-1">Please check back later or contact an administrator.</p>
                                 </div>
                             </template>
 
                             <div class="space-y-6">
                                 <template x-for="question in visibleQuestions" :key="question.id">
-                                    <div class="space-y-2">
-                                        <label class="block text-sm font-medium">
-                                            <span x-text="question.text"></span>
-                                            <template x-if="question.required && question.type !== 'display'">
-                                                <span class="text-red-600 ml-1">*</span>
-                                            </template>
-                                        </label>
-                                        <template x-if="question.help_text">
-                                            <p class="text-xs text-muted-foreground" x-text="question.help_text"></p>
-                                        </template>
+                                    <div class="bg-white/70 backdrop-blur-sm border border-white/50 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-white/80">
+                                        <div class="space-y-4">
+                                            <div class="flex items-start gap-3">
+                                                <div class="w-8 h-8 bg-gradient-to-br from-[#003087]/10 to-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                    <div class="w-2 h-2 bg-[#003087] rounded-full"></div>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <label class="block text-base font-semibold text-gray-900 leading-tight">
+                                                        <span x-text="question.text"></span>
+                                                        <template x-if="question.required && question.type !== 'display'">
+                                                            <span class="text-red-500 ml-1 text-lg">*</span>
+                                                        </template>
+                                                    </label>
+                                                    <template x-if="question.help_text">
+                                                        <p class="text-sm text-gray-600 mt-2 leading-relaxed" x-text="question.help_text"></p>
+                                                    </template>
+                                                </div>
+                                            </div>
 
                                         {{-- Display-only text --}}
                                         <template x-if="question.type === 'display'">
-                                            <div class="w-full px-4 py-3 border border-border rounded-lg bg-gray-50 text-gray-800" x-text="question.placeholder || 'Region XI'"></div>
+                                            <div class="ml-11 mt-4 px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-lg text-gray-800 font-medium shadow-inner">
+                                                <span x-text="question.placeholder || 'Region XI'"></span>
+                                            </div>
                                         </template>
 
                                         {{-- Text input --}}
                                         <template x-if="question.type === 'text'">
-                                            <input
-                                                type="text"
-                                                class="w-full px-4 py-3 border border-border rounded-lg"
-                                                :placeholder="question.placeholder || 'Your answer'"
-                                                :value="formData[question.id] || ''"
-                                                @input="formData[question.id] = $event.target.value"
-                                            >
+                                            <div class="ml-11">
+                                                <input
+                                                    type="text"
+                                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-[#003087] focus:ring-4 focus:ring-[#003087]/10 transition-all duration-200 shadow-sm hover:shadow-md"
+                                                    :placeholder="question.placeholder || 'Your answer'"
+                                                    :value="formData[question.id] || ''"
+                                                    @input="formData[question.id] = $event.target.value"
+                                                >
+                                            </div>
                                         </template>
 
                                         {{-- Textarea --}}
                                         <template x-if="question.type === 'textarea'">
-                                            <textarea
-                                                class="w-full px-4 py-3 border border-border rounded-lg min-h-[120px]"
-                                                :placeholder="question.placeholder || 'Your answer'"
-                                                :value="formData[question.id] || ''"
-                                                @input="formData[question.id] = $event.target.value"
-                                            ></textarea>
+                                            <div class="ml-11">
+                                                <textarea
+                                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-[#003087] focus:ring-4 focus:ring-[#003087]/10 transition-all duration-200 shadow-sm hover:shadow-md min-h-[120px] resize-vertical"
+                                                    :placeholder="question.placeholder || 'Your answer'"
+                                                    :value="formData[question.id] || ''"
+                                                    @input="formData[question.id] = $event.target.value"
+                                                ></textarea>
+                                            </div>
                                         </template>
 
                                         {{-- Number --}}
                                         <template x-if="question.type === 'number'">
-                                            <input
-                                                type="number"
-                                                class="w-full md:w-1/3 px-4 py-3 border border-border rounded-lg"
-                                                :placeholder="question.placeholder || '0'"
-                                                :value="formData[question.id] || ''"
-                                                :readonly="isAutoCalculatedAgeQuestion(question)"
-                                                :class="isAutoCalculatedAgeQuestion(question) ? 'bg-gray-50 text-gray-600 cursor-not-allowed' : ''"
-                                                @input="formData[question.id] = $event.target.value"
-                                            >
+                                            <div class="ml-11">
+                                                <input
+                                                    type="number"
+                                                    class="w-full md:w-1/3 px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-[#003087] focus:ring-4 focus:ring-[#003087]/10 transition-all duration-200 shadow-sm hover:shadow-md"
+                                                    :placeholder="question.placeholder || '0'"
+                                                    :value="formData[question.id] || ''"
+                                                    :readonly="isAutoCalculatedAgeQuestion(question)"
+                                                    :class="isAutoCalculatedAgeQuestion(question) ? 'bg-gray-50 text-gray-600 cursor-not-allowed border-gray-300' : ''"
+                                                    @input="formData[question.id] = $event.target.value"
+                                                >
+                                            </div>
                                         </template>
 
                                         {{-- Date --}}
                                         <template x-if="question.type === 'date'">
-                                            <input
-                                                type="date"
-                                                class="w-full md:w-1/2 px-4 py-3 border border-border rounded-lg"
-                                                :value="formData[question.id] || ''"
-                                                @input="onDateChange(question, $event.target.value)"
-                                                @change="onDateChange(question, $event.target.value)"
-                                            >
+                                            <div class="ml-11">
+                                                <input
+                                                    type="date"
+                                                    class="w-full md:w-1/2 px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 focus:border-[#003087] focus:ring-4 focus:ring-[#003087]/10 transition-all duration-200 shadow-sm hover:shadow-md"
+                                                    :value="formData[question.id] || ''"
+                                                    @input="onDateChange(question, $event.target.value)"
+                                                    @change="onDateChange(question, $event.target.value)"
+                                                >
+                                            </div>
                                         </template>
 
                                         {{-- Month --}}
                                         <template x-if="question.type === 'month'">
-                                            <input
-                                                type="month"
-                                                class="w-full md:w-1/2 px-4 py-3 border border-border rounded-lg"
-                                                :value="formData[question.id] || ''"
-                                                @input="formData[question.id] = $event.target.value"
-                                            >
+                                            <div class="ml-11">
+                                                <input
+                                                    type="month"
+                                                    class="w-full md:w-1/2 px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 focus:border-[#003087] focus:ring-4 focus:ring-[#003087]/10 transition-all duration-200 shadow-sm hover:shadow-md"
+                                                    :value="formData[question.id] || ''"
+                                                    @input="formData[question.id] = $event.target.value"
+                                                >
+                                            </div>
                                         </template>
 
                                         {{-- Radio --}}
                                         <template x-if="question.type === 'radio'">
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-                                                <template x-for="answer in sortedAnswers(question)" :key="answer.id">
-                                                    <label class="flex items-center gap-2 cursor-pointer">
-                                                        <input
-                                                            type="radio"
-                                                            :name="'radio-' + question.id"
-                                                            class="w-4 h-4 text-[#003087]"
-                                                            :checked="formData[question.id] === answer.text || (answerNeedsSpecify(answer.text) && (formData[question.id] || '').startsWith(answer.text + ': '))"
-                                                            @change="onRadioChange(question, answer.text)"
-                                                        >
-                                                        <span class="text-sm" x-text="answer.text"></span>
-                                                    </label>
-                                                </template>
-                                                {{-- Specify text box for Others/Self-describe --}}
-                                                <template x-if="getRadioSpecifyLabel(question) && ((formData[question.id] || '') === getRadioSpecifyLabel(question) || (formData[question.id] || '').startsWith(getRadioSpecifyLabel(question) + ': '))">
-                                                    <div class="col-span-full mt-1">
-                                                        <input
-                                                            type="text"
-                                                            class="w-full md:w-1/2 px-4 py-2 border border-border rounded-lg text-sm"
-                                                            placeholder="Please specify..."
-                                                            :value="(formData[question.id] || '').includes(': ') ? formData[question.id].substring(formData[question.id].indexOf(': ') + 2) : ''"
-                                                            @input="formData[question.id] = getRadioSpecifyLabel(question) + ': ' + $event.target.value"
-                                                        >
-                                                    </div>
-                                                </template>
+                                            <div class="ml-11">
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                                    <template x-for="answer in sortedAnswers(question)" :key="answer.id">
+                                                        <label class="group flex items-center gap-3 cursor-pointer p-3 rounded-xl border-2 border-gray-200 hover:border-[#003087]/30 hover:bg-[#003087]/5 transition-all duration-200">
+                                                            <input
+                                                                type="radio"
+                                                                :name="'radio-' + question.id"
+                                                                class="w-4 h-4 text-[#003087] focus:ring-[#003087]/30"
+                                                                :checked="formData[question.id] === answer.text || (answerNeedsSpecify(answer.text) && (formData[question.id] || '').startsWith(answer.text + ': '))"
+                                                                @change="onRadioChange(question, answer.text)"
+                                                            >
+                                                            <span class="text-gray-800 font-medium group-hover:text-[#003087] transition-colors" x-text="answer.text"></span>
+                                                        </label>
+                                                    </template>
+                                                    {{-- Specify text box for Others/Self-describe --}}
+                                                    <template x-if="getRadioSpecifyLabel(question) && ((formData[question.id] || '') === getRadioSpecifyLabel(question) || (formData[question.id] || '').startsWith(getRadioSpecifyLabel(question) + ': '))">
+                                                        <div class="col-span-full mt-2 ml-7">
+                                                            <input
+                                                                type="text"
+                                                                class="w-full md:w-1/2 px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-[#003087] focus:ring-4 focus:ring-[#003087]/10 transition-all duration-200 shadow-sm"
+                                                                placeholder="Please specify..."
+                                                                :value="(formData[question.id] || '').includes(': ') ? formData[question.id].substring(formData[question.id].indexOf(': ') + 2) : ''"
+                                                                @input="formData[question.id] = getRadioSpecifyLabel(question) + ': ' + $event.target.value"
+                                                            >
+                                                        </div>
+                                                    </template>
+                                                </div>
                                             </div>
                                         </template>
 
                                         {{-- Checkbox --}}
                                         <template x-if="question.type === 'checkbox'">
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-                                                <template x-for="answer in sortedAnswers(question)" :key="answer.id">
-                                                    <label class="flex items-center gap-2 cursor-pointer">
-                                                        <input
-                                                            type="checkbox"
-                                                            class="w-4 h-4 text-[#003087] rounded"
-                                                            :checked="(formData[question.id] || []).some(v => v === answer.text || (answer.text.toLowerCase().includes('other') && v.startsWith(answer.text + ': ')))"
-                                                            @change="toggleCheckbox(question.id, answer.text, $event.target.checked)"
-                                                        >
-                                                        <span class="text-sm" x-text="answer.text"></span>
-                                                    </label>
-                                                </template>
-                                                {{-- Others specify text box --}}
-                                                <template x-if="sortedAnswers(question).some(a => a.text.toLowerCase().includes('other')) && (formData[question.id] || []).some(v => v.toLowerCase().startsWith('others'))">
-                                                    <div class="col-span-full mt-1">
-                                                        <input
-                                                            type="text"
-                                                            class="w-full md:w-1/2 px-4 py-2 border border-border rounded-lg text-sm"
-                                                            placeholder="Please specify..."
-                                                            :value="getOthersSpecifyValue(question.id)"
-                                                            @input="setOthersSpecifyValue(question.id, $event.target.value)"
-                                                        >
-                                                    </div>
-                                                </template>
+                                            <div class="ml-11">
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                                    <template x-for="answer in sortedAnswers(question)" :key="answer.id">
+                                                        <label class="group flex items-center gap-3 cursor-pointer p-3 rounded-xl border-2 border-gray-200 hover:border-[#003087]/30 hover:bg-[#003087]/5 transition-all duration-200">
+                                                            <input
+                                                                type="checkbox"
+                                                                class="w-4 h-4 text-[#003087] focus:ring-[#003087]/30 rounded"
+                                                                :checked="(formData[question.id] || []).some(v => v === answer.text || (answer.text.toLowerCase().includes('other') && v.startsWith(answer.text + ': ')))"
+                                                                @change="toggleCheckbox(question.id, answer.text, $event.target.checked)"
+                                                            >
+                                                            <span class="text-gray-800 font-medium group-hover:text-[#003087] transition-colors" x-text="answer.text"></span>
+                                                        </label>
+                                                    </template>
+                                                    {{-- Others specify text box --}}
+                                                    <template x-if="sortedAnswers(question).some(a => a.text.toLowerCase().includes('other')) && (formData[question.id] || []).some(v => v.toLowerCase().startsWith('others'))">
+                                                        <div class="col-span-full mt-2 ml-7">
+                                                            <input
+                                                                type="text"
+                                                                class="w-full md:w-1/2 px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-[#003087] focus:ring-4 focus:ring-[#003087]/10 transition-all duration-200 shadow-sm"
+                                                                placeholder="Please specify..."
+                                                                :value="getOthersSpecifyValue(question.id)"
+                                                                @input="setOthersSpecifyValue(question.id, $event.target.value)"
+                                                            >
+                                                        </div>
+                                                    </template>
+                                                </div>
                                             </div>
                                         </template>
 
                                         {{-- Select --}}
                                         <template x-if="question.type === 'select'">
-                                            <div class="space-y-2">
+                                            <div class="ml-11 space-y-3">
                                                 <select
-                                                    class="w-full px-4 py-3 border border-border rounded-lg"
+                                                    class="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 focus:border-[#003087] focus:ring-4 focus:ring-[#003087]/10 transition-all duration-200 shadow-sm hover:shadow-md appearance-none"
                                                     :value="formData[question.id] || ''"
                                                     @change="onSelectChange(question, $event.target.value)"
                                                 >
@@ -272,12 +488,119 @@
                                                 <template x-if="getSelectSpecifyLabel(question) && ((formData[question.id] || '') === getSelectSpecifyLabel(question) || (formData[question.id] || '').startsWith(getSelectSpecifyLabel(question) + ': '))">
                                                     <input
                                                         type="text"
-                                                        class="w-full md:w-1/2 px-4 py-2 border border-border rounded-lg text-sm"
+                                                        class="w-full md:w-1/2 px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:border-[#003087] focus:ring-4 focus:ring-[#003087]/10 transition-all duration-200 shadow-sm"
                                                         placeholder="Please specify..."
                                                         :value="(formData[question.id] || '').includes(': ') ? formData[question.id].substring(formData[question.id].indexOf(': ') + 2) : ''"
                                                         @input="formData[question.id] = getSelectSpecifyLabel(question) + ': ' + $event.target.value"
                                                     >
                                                 </template>
+                                            </div>
+                                        </template>
+
+                                        {{-- Country Select (from restcountries.com) --}}
+                                        <template x-if="question.type === 'country_select'">
+                                            <div x-data="{
+                                                search: '',
+                                                open: false,
+                                                get filtered() {
+                                                    if (!this.search) return countries.slice(0, 80);
+                                                    return countries.filter(c => c.toLowerCase().includes(this.search.toLowerCase())).slice(0, 80);
+                                                },
+                                                select(country) {
+                                                    formData[question.id] = country;
+                                                    this.search = '';
+                                                    this.open = false;
+                                                }
+                                            }" class="relative">
+                                                <div class="relative">
+                                                    <input
+                                                        type="text"
+                                                        class="w-full px-4 py-3 border border-border rounded-lg pr-10"
+                                                        placeholder="Search for a country..."
+                                                        x-model="search"
+                                                        @focus="open = true"
+                                                        @blur="setTimeout(() => open = false, 150)"
+                                                    >
+                                                    <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                                                        <template x-if="formData[question.id] && !open">
+                                                            <span class="text-xs text-gray-500 max-w-[160px] truncate" x-text="formData[question.id]"></span>
+                                                        </template>
+                                                        <template x-if="!formData[question.id] || open">
+                                                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 111 11a6 6 0 0116 0z"/></svg>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                                <template x-if="formData[question.id] && !open">
+                                                    <div class="mt-1 flex items-center gap-2">
+                                                        <span class="text-sm font-medium text-[#003087]" x-text="formData[question.id]"></span>
+                                                        <button type="button" @click="formData[question.id] = null; search = ''" class="text-xs text-gray-400 hover:text-red-500">✕</button>
+                                                    </div>
+                                                </template>
+                                                <div
+                                                    x-show="open && filtered.length > 0"
+                                                    class="absolute z-20 w-full bg-white border border-border rounded-lg shadow-lg mt-1 max-h-56 overflow-y-auto"
+                                                >
+                                                    <template x-for="country in filtered" :key="country">
+                                                        <div
+                                                            @mousedown.prevent="select(country)"
+                                                            class="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50"
+                                                            :class="formData[question.id] === country ? 'bg-blue-50 font-medium text-[#003087]' : 'text-gray-800'"
+                                                            x-text="country"
+                                                        ></div>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        {{-- PSGC Location Dropdowns (Region / Province / Municipality / Barangay) --}}
+                                        <template x-if="['region_select','province_select','municipality_select','barangay_select'].includes(question.type)">
+                                            <div class="relative">
+                                                <div class="relative">
+                                                    <input
+                                                        type="text"
+                                                        class="w-full px-4 py-3 border border-border rounded-lg pr-10"
+                                                        :placeholder="
+                                                            question.type === 'province_select'     && psgc.provinces.length === 0     ? 'Select a region first...' :
+                                                            question.type === 'municipality_select' && psgc.municipalities.length === 0 ? 'Select a province first...' :
+                                                            question.type === 'barangay_select'     && psgc.barangays.length === 0      ? 'Select a municipality first...' :
+                                                            'Search...'"
+                                                        :disabled="
+                                                            (question.type === 'province_select'     && psgc.provinces.length === 0) ||
+                                                            (question.type === 'municipality_select' && psgc.municipalities.length === 0) ||
+                                                            (question.type === 'barangay_select'     && psgc.barangays.length === 0)"
+                                                        :value="psgcSearch[question.id] || ''"
+                                                        @input="psgcSearch[question.id] = $event.target.value"
+                                                        @focus="psgcOpen[question.id] = true"
+                                                        @blur="setTimeout(() => { psgcOpen[question.id] = false }, 150)"
+                                                    >
+                                                    <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                                                        <template x-if="formData[question.id] && !psgcOpen[question.id]">
+                                                            <span class="text-xs text-gray-500 max-w-[160px] truncate" x-text="formData[question.id]"></span>
+                                                        </template>
+                                                        <template x-if="!formData[question.id] || psgcOpen[question.id]">
+                                                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 111 11a6 6 0 0116 0z"/></svg>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                                <template x-if="formData[question.id] && !psgcOpen[question.id]">
+                                                    <div class="mt-1 flex items-center gap-2">
+                                                        <span class="text-sm font-medium text-[#003087]" x-text="formData[question.id]"></span>
+                                                        <button type="button" @click="delete formData[question.id]; psgcSearch[question.id] = ''; clearPsgcDownstream(question.type)" class="text-xs text-gray-400 hover:text-red-500">✕</button>
+                                                    </div>
+                                                </template>
+                                                <div
+                                                    x-show="psgcOpen[question.id] && getPsgcFiltered(question.id, question.type).length > 0"
+                                                    class="absolute z-20 w-full bg-white border border-border rounded-lg shadow-lg mt-1 max-h-56 overflow-y-auto"
+                                                >
+                                                    <template x-for="item in getPsgcFiltered(question.id, question.type)" :key="getPsgcCode(item)">
+                                                        <div
+                                                            @mousedown.prevent="selectPsgcItem(question, item)"
+                                                            class="px-4 py-2 text-sm cursor-pointer hover:bg-blue-50"
+                                                            :class="formData[question.id] === getPsgcName(item) ? 'bg-blue-50 font-medium text-[#003087]' : 'text-gray-800'"
+                                                            x-text="getPsgcName(item)"
+                                                        ></div>
+                                                    </template>
+                                                </div>
                                             </div>
                                         </template>
 
@@ -324,15 +647,17 @@
             </div>
 
             {{-- Navigation Footer --}}
-            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-border p-6 shadow-lg z-50">
+            <div class="fixed bottom-0 left-0 right-0 nav-footer backdrop-blur-sm p-6 shadow-2xl z-50">
                 <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
                     <button
                         @click="previousSection()"
                         :disabled="currentSection === 1"
-                        :class="currentSection === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'"
-                        class="flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-colors"
+                        :class="currentSection === 1 ? 'nav-btn-disabled' : 'nav-btn-prev'"
+                        class="nav-btn-base flex items-center gap-3 px-6 py-3"
                     >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        <div class="nav-btn-icon">
+                            <svg class="w-4 h-4 text-slate-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </div>
                         Previous Section
                     </button>
 
@@ -340,9 +665,12 @@
                         <button
                             @click="saveForLater()"
                             :disabled="saving"
-                            class="flex items-center gap-2 px-6 py-3 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors disabled:opacity-50"
+                            :class="saving ? 'nav-btn-disabled' : 'nav-btn-save'"
+                            class="nav-btn-base flex items-center gap-3 px-6 py-3"
                         >
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                            <div class="nav-btn-icon">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                            </div>
                             <span x-text="saving ? 'Saving...' : 'Save for Later'"></span>
                         </button>
                     </template>
@@ -350,10 +678,12 @@
                     <template x-if="currentSection < totalSections">
                         <button
                             @click="nextSection()"
-                            class="flex items-center gap-2 px-6 py-3 bg-[#003087] text-white rounded-lg font-medium hover:bg-[#002366] transition-colors"
+                            class="nav-btn-base nav-btn-next flex items-center gap-3 px-6 py-3"
                         >
                             Next Section
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            <div class="nav-btn-icon">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </div>
                         </button>
                     </template>
 
@@ -361,9 +691,11 @@
                         <button
                             @click="submitSurvey()"
                             :disabled="saving"
-                            class="flex items-center gap-2 px-8 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50"
+                            class="flex items-center gap-3 px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-xl font-semibold hover:from-green-700 hover:to-emerald-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 transform hover:scale-105"
                         >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            </div>
                             <span x-text="saving ? 'Saving...' : (isEditMode ? 'Update Answers' : 'Submit Survey')"></span>
                         </button>
                     </template>
@@ -389,9 +721,45 @@ function surveyApp() {
         resumeError: '',
         saving: false,
         showSavedBanner: false,
+        showLogin: {{ ($errors->has('email') || $errors->has('password') || session('show_login_modal')) ? 'true' : 'false' }},
+        countries: [],
+        psgc: {
+            regions: [],
+            provinces: [],
+            municipalities: [],
+            barangays: [],
+            regionCode: null,
+            provinceCode: null,
+            municipalityCode: null,
+        },
+        psgcSearch: {},
+        psgcOpen: {},
 
         init() {
             this.syncAutoCalculatedAge();
+            fetch('https://restcountries.com/v3.1/all?fields=name')
+                .then(r => r.json())
+                .then(data => {
+                    this.countries = data
+                        .map(c => c.name.common)
+                        .sort((a, b) => a.localeCompare(b));
+                })
+                .catch(() => {});
+            fetch('https://psgc.gitlab.io/api/regions/')
+                .then(r => r.json())
+                .then(data => {
+                    const order = {
+                        'Region I': 1, 'Region II': 2, 'Region III': 3,
+                        'Region IV-A': 4, 'Region IV-B': 5, 'Region V': 6,
+                        'Region VI': 7, 'Region VII': 8, 'Region VIII': 9,
+                        'Region IX': 10, 'Region X': 11, 'Region XI': 12,
+                        'Region XII': 13, 'Region XIII': 14,
+                        'NCR': 15, 'CAR': 16, 'NIR': 17, 'BARMM': 18,
+                    };
+                    this.psgc.regions = (Array.isArray(data) ? data : [])
+                        .sort((a, b) => (order[a.regionName] || 99) - (order[b.regionName] || 99));
+                })
+                .catch(() => {});
         },
 
         get totalSections() {
@@ -517,6 +885,91 @@ function surveyApp() {
 
             const question = (identificationCategory.questions || []).find(q => q.text === text);
             return question ? question.id : null;
+        },
+
+        getPsgcName(item) {
+            if (item.regionName && item.name) return item.regionName + ' - ' + item.name;
+            return item.name || '';
+        },
+
+        getPsgcCode(item) {
+            return item.code || '';
+        },
+
+        getPsgcItems(type) {
+            if (type === 'region_select')       return this.psgc.regions;
+            if (type === 'province_select')     return this.psgc.provinces;
+            if (type === 'municipality_select') return this.psgc.municipalities;
+            if (type === 'barangay_select')     return this.psgc.barangays;
+            return [];
+        },
+
+        getPsgcFiltered(questionId, type) {
+            const s = (this.psgcSearch[questionId] || '').toLowerCase();
+            const items = this.getPsgcItems(type);
+            const filtered = s ? items.filter(i => this.getPsgcName(i).toLowerCase().includes(s)) : items;
+            return filtered.slice(0, 80);
+        },
+
+        selectPsgcItem(question, item) {
+            const name = this.getPsgcName(item);
+            const code = this.getPsgcCode(item);
+            this.formData[question.id] = name;
+            this.psgcSearch[question.id] = '';
+            this.psgcOpen[question.id] = false;
+
+            if (question.type === 'region_select') {
+                this.psgc.regionCode = code;
+                this.psgc.provinces = [];
+                this.psgc.municipalities = [];
+                this.psgc.barangays = [];
+                this.psgc.provinceCode = null;
+                this.psgc.municipalityCode = null;
+                this.clearPsgcDownstream('region_select');
+                fetch('https://psgc.gitlab.io/api/regions/' + code + '/provinces/')
+                    .then(r => r.json())
+                    .then(data => {
+                        this.psgc.provinces = (Array.isArray(data) ? data : [])
+                            .sort((a, b) => a.name.localeCompare(b.name));
+                    })
+                    .catch(() => {});
+            } else if (question.type === 'province_select') {
+                this.psgc.provinceCode = code;
+                this.psgc.municipalities = [];
+                this.psgc.barangays = [];
+                this.psgc.municipalityCode = null;
+                this.clearPsgcDownstream('province_select');
+                fetch('https://psgc.gitlab.io/api/provinces/' + code + '/cities-municipalities/')
+                    .then(r => r.json())
+                    .then(data => {
+                        this.psgc.municipalities = (Array.isArray(data) ? data : [])
+                            .sort((a, b) => a.name.localeCompare(b.name));
+                    })
+                    .catch(() => {});
+            } else if (question.type === 'municipality_select') {
+                this.psgc.municipalityCode = code;
+                this.psgc.barangays = [];
+                this.clearPsgcDownstream('municipality_select');
+                fetch('https://psgc.gitlab.io/api/cities-municipalities/' + code + '/barangays/')
+                    .then(r => r.json())
+                    .then(data => {
+                        this.psgc.barangays = (Array.isArray(data) ? data : [])
+                            .sort((a, b) => a.name.localeCompare(b.name));
+                    })
+                    .catch(() => {});
+            }
+        },
+
+        clearPsgcDownstream(fromType) {
+            const order = ['region_select', 'province_select', 'municipality_select', 'barangay_select'];
+            const idx = order.indexOf(fromType);
+            for (const cat of this.categories) {
+                for (const q of (cat.questions || [])) {
+                    if (order.indexOf(q.type) > idx) {
+                        delete this.formData[q.id];
+                    }
+                }
+            }
         },
 
         isConditionMet(question) {
