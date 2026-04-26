@@ -225,46 +225,46 @@
         <div class="hero-glow-a"></div>
         <div class="hero-glow-b"></div>
 
-        <div class="relative grid gap-7 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1.15fr_0.9fr] lg:items-center lg:px-12 lg:py-13">
+        <div class="relative grid gap-7 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:px-12 lg:py-13">
             <div>
                 <div class="badge inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em]">
                     Ateneo de Davao University
                 </div>
 
-                <h1 class="title-font mt-5 text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
+                <h1 class="title-font mt-5 text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">
                     ADDU Alumni
                     <span class="block" style="color: #f5b800;">Tracer Study</span>
                 </h1>
 
-                <p class="mt-5 max-w-2xl text-lg leading-relaxed text-white/90 sm:text-xl">
+                <p class="mt-4 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
                     Your story after graduation helps us improve learning, career preparation, and alumni support for future Ateneans.
                 </p>
 
-                <div class="mt-7 flex flex-wrap items-center gap-3">
-                    <span class="time-chip inline-flex items-center rounded-full px-4 py-2 text-sm font-bold">
+                <div class="mt-6 flex flex-wrap items-center gap-3">
+                    <span class="time-chip inline-flex items-center rounded-full px-4 py-2 text-xs font-bold sm:text-sm">
                         15-20 minutes to complete
                     </span>
-                    <span class="badge inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold">
+                    <span class="badge inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold sm:text-sm">
                         One raffle entry for an Ateneo Jacket
                     </span>
                 </div>
             </div>
 
-            <aside class="action-card rounded-2xl p-6 sm:p-7">
-                <h2 class="title-font text-2xl font-bold text-main">Ready to begin?</h2>
-                <p class="mt-2 text-base leading-relaxed text-muted">
+            <aside class="action-card rounded-2xl p-5 sm:p-6">
+                <h2 class="title-font text-xl font-bold text-main sm:text-2xl">Ready to begin?</h2>
+                <p class="mt-2 text-sm leading-relaxed text-muted sm:text-base">
                     Please answer as honestly as possible. Your response is valuable and treated with confidentiality.
                 </p>
                 <a
                     href="{{ url('/survey') }}"
-                    class="start-btn mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-lg font-bold transition"
+                    class="start-btn mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-bold transition sm:text-lg"
                 >
                     Start Survey
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                     </svg>
                 </a>
-                <p class="mt-3 text-center text-sm text-slate-500">You can save your progress and resume later.</p>
+                <p class="mt-3 text-center text-xs text-slate-500 sm:text-sm">You can save your progress and resume later.</p>
             </aside>
         </div>
     </section>
@@ -337,6 +337,28 @@
                     </div>
                     <p class="mt-2 text-sm text-muted">Review responses and complete your entry.</p>
                 </div>
+            </div>
+        </div>
+
+        <div class="faq-shell mt-4">
+            <h3 class="title-font text-2xl font-bold text-main">Frequently Asked Questions</h3>
+            <div class="mt-4">
+                <details class="faq-item" open>
+                    <summary>Are my answers anonymous?</summary>
+                    <p>Yes. Responses are used for institutional research and reporting, and are handled confidentially.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Can I pause and continue later?</summary>
+                    <p>Yes. Use Save for Later and keep your resume code so you can continue where you left off.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>How long does the survey take?</summary>
+                    <p>Most alumni complete the survey within 15-20 minutes.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Who can answer this tracer study?</summary>
+                    <p>It is intended for ADDU alumni who are invited to provide post-graduation outcomes and feedback.</p>
+                </details>
             </div>
         </div>
     </section>
