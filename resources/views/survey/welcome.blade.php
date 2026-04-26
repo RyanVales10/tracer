@@ -15,18 +15,38 @@
         --addu-red: #9e1b32;
         --addu-ink: #11243f;
         --addu-muted: #4d607b;
+        position: relative;
         font-family: 'Source Sans 3', sans-serif;
-        background: linear-gradient(170deg, #eaf1ff 0%, #f7f9ff 40%, #ffffff 100%);
+        background:
+            radial-gradient(circle at top right, rgba(11, 88, 196, 0.12), transparent 28%),
+            radial-gradient(circle at bottom left, rgba(245, 184, 0, 0.16), transparent 24%),
+            linear-gradient(180deg, #f4f7fc 0%, #eef3fb 45%, #ffffff 100%);
     }
 
     .welcome-page .title-font {
         font-family: 'Montserrat', sans-serif;
     }
 
+    .welcome-page .page-shell {
+        position: relative;
+        isolation: isolate;
+    }
+
+    .welcome-page .page-shell::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(255, 255, 255, 0.68) 100%),
+            linear-gradient(135deg, rgba(0, 58, 140, 0.06) 0%, rgba(255, 255, 255, 0) 60%);
+        border-radius: 2rem;
+        z-index: -1;
+    }
+
     .welcome-page .hero-panel {
-        background: linear-gradient(135deg, var(--addu-blue-deep) 0%, var(--addu-blue) 58%, var(--addu-blue-bright) 100%);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        box-shadow: 0 20px 45px rgba(0, 42, 99, 0.32);
+        background: linear-gradient(135deg, #00244f 0%, var(--addu-blue) 52%, var(--addu-blue-bright) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 24px 48px rgba(0, 42, 99, 0.28);
     }
 
     .welcome-page .hero-glow-a,
@@ -42,7 +62,7 @@
         height: 260px;
         right: -50px;
         top: -50px;
-        background: rgba(245, 184, 0, 0.38);
+        background: rgba(245, 184, 0, 0.24);
     }
 
     .welcome-page .hero-glow-b {
@@ -50,12 +70,12 @@
         height: 230px;
         left: -60px;
         bottom: -60px;
-        background: rgba(158, 27, 50, 0.25);
+        background: rgba(158, 27, 50, 0.16);
     }
 
     .welcome-page .badge {
-        background: rgba(255, 255, 255, 0.14);
-        border: 1px solid rgba(255, 255, 255, 0.28);
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.24);
         color: #fff;
     }
 
@@ -67,7 +87,7 @@
     .welcome-page .action-card {
         background: #ffffff;
         border: 1px solid #d8e3f7;
-        box-shadow: 0 14px 30px rgba(17, 36, 63, 0.14);
+        box-shadow: 0 16px 36px rgba(17, 36, 63, 0.14);
     }
 
     .welcome-page .start-btn {
@@ -83,20 +103,23 @@
         background: #fff;
         border: 1px solid #dbe5f6;
         border-radius: 16px;
-        box-shadow: 0 8px 20px rgba(17, 36, 63, 0.09);
+        box-shadow: 0 10px 24px rgba(17, 36, 63, 0.08);
         padding: 1.25rem;
+        min-height: 100%;
     }
 
-    .welcome-page .info-card.blue {
-        border-top: 5px solid var(--addu-blue);
-    }
-
-    .welcome-page .info-card.gold {
-        border-top: 5px solid var(--addu-gold);
-    }
-
-    .welcome-page .info-card.red {
-        border-top: 5px solid var(--addu-red);
+    .welcome-page .info-card .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        border-radius: 9999px;
+        padding: 0.3rem 0.65rem;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--addu-blue);
+        background: #edf3ff;
     }
 
     .welcome-page .privacy-panel {
@@ -116,8 +139,8 @@
         border: 1px solid #d6e1f3;
         border-radius: 16px;
         background: #fff;
-        box-shadow: 0 8px 18px rgba(17, 36, 63, 0.08);
-        padding: 1rem;
+        box-shadow: 0 10px 22px rgba(17, 36, 63, 0.08);
+        padding: 1.1rem;
     }
 
     .welcome-page .timeline-grid {
@@ -129,7 +152,7 @@
     .welcome-page .timeline-step {
         border: 1px solid #e1e8f4;
         border-radius: 12px;
-        background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+        background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%);
         padding: 0.9rem;
     }
 
@@ -150,8 +173,8 @@
         border: 1px solid #d6e1f3;
         border-radius: 16px;
         background: #fff;
-        box-shadow: 0 8px 18px rgba(17, 36, 63, 0.08);
-        padding: 1rem;
+        box-shadow: 0 10px 22px rgba(17, 36, 63, 0.08);
+        padding: 1.1rem;
     }
 
     .welcome-page .faq-item {
@@ -188,14 +211,21 @@
             grid-template-columns: repeat(4, minmax(0, 1fr));
         }
     }
+
+    @media (min-width: 1024px) {
+        .welcome-page .intro-grid {
+            grid-template-columns: 1.3fr 0.9fr;
+        }
+    }
 </style>
 
-<div class="welcome-page min-h-screen py-10 px-4 sm:px-6 lg:px-8">
-    <section class="relative mx-auto max-w-6xl overflow-hidden rounded-3xl hero-panel text-white">
+<div class="welcome-page min-h-screen px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+    <div class="page-shell mx-auto max-w-6xl rounded-[2rem] p-0.5 sm:p-1">
+    <section class="relative overflow-hidden rounded-[1.75rem] hero-panel text-white">
         <div class="hero-glow-a"></div>
         <div class="hero-glow-b"></div>
 
-        <div class="relative grid gap-8 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:px-12 lg:py-14">
+        <div class="relative grid gap-8 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1.25fr_0.95fr] lg:items-center lg:px-12 lg:py-14">
             <div>
                 <div class="badge inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em]">
                     Ateneo de Davao University
@@ -239,26 +269,29 @@
         </div>
     </section>
 
-    <section class="mx-auto mt-6 max-w-6xl pb-8">
+    <section class="mt-6 pb-8">
         <div class="grid gap-4 md:grid-cols-3">
-            <article class="info-card blue">
-                <h3 class="title-font text-2xl font-bold text-main">About This Study</h3>
+            <article class="info-card">
+                <div class="eyebrow">About</div>
+                <h3 class="title-font mt-3 text-2xl font-bold text-main">About This Study</h3>
                 <p class="mt-2 text-base leading-relaxed text-muted">
                     The tracer study gathers insights on career paths, achievements, and alumni experiences to improve
                     academic programs and institutional services.
                 </p>
             </article>
 
-            <article class="info-card gold">
-                <h3 class="title-font text-2xl font-bold text-main">Time Commitment</h3>
+            <article class="info-card">
+                <div class="eyebrow">Time</div>
+                <h3 class="title-font mt-3 text-2xl font-bold text-main">Time Commitment</h3>
                 <p class="mt-2 text-base leading-relaxed text-muted">
                     The survey takes around <span class="font-bold" style="color: #11243f;">15-20 minutes</span>.
                     Please complete it in one sitting if possible.
                 </p>
             </article>
 
-            <article class="info-card red">
-                <h3 class="title-font text-2xl font-bold text-main">Prize Incentive</h3>
+            <article class="info-card">
+                <div class="eyebrow">Incentive</div>
+                <h3 class="title-font mt-3 text-2xl font-bold text-main">Prize Incentive</h3>
                 <p class="mt-2 text-base leading-relaxed text-muted">
                     Every completed response receives one raffle entry for a chance to win an
                     <span class="font-bold" style="color: #11243f;">Ateneo Jacket</span>.
@@ -295,7 +328,7 @@
                         <span class="step-dot">3</span>
                         <p class="font-bold text-main">Career & Feedback</p>
                     </div>
-                    <p class="mt-2 text-sm text-muted">Tell us about work outcomes and ADdU relevance.</p>
+                    <p class="mt-2 text-sm text-muted">Tell us about work outcomes and ADDU relevance.</p>
                 </div>
                 <div class="timeline-step">
                     <div class="flex items-center gap-2">
@@ -329,5 +362,6 @@
             </div>
         </div>
     </section>
+    </div>
 </div>
 @endsection
