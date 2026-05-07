@@ -656,6 +656,15 @@ function surveyApp() {
 
         init() {
             this.syncAutoCalculatedAge();
+            // Prevent users from using the Back button to return to the welcome page
+            try {
+                history.pushState(null, '', location.href);
+                window.addEventListener('popstate', () => {
+                    history.pushState(null, '', location.href);
+                });
+            } catch (e) {
+                // ignore
+            }
             fetch('https://restcountries.com/v3.1/all?fields=name')
                 .then(r => r.json())
                 .then(data => {
