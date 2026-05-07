@@ -10,10 +10,9 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        if (session('admin_authenticated')) {
-            return redirect('/admin/dashboard');
-        }
-
+        // Always show the admin login screen when /admin is accessed.
+        // Clear any prior admin authentication so that the user must re-enter credentials.
+        session()->forget('admin_authenticated');
         return view('admin.login');
     }
 

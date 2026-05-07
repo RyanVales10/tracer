@@ -9,14 +9,9 @@ class AdminAuth
 {
     public function handle(Request $request, Closure $next)
     {
-        // Check if admin is authenticated
-        $isAuthenticated = $request->session()->get('admin_authenticated') === true;
-
-        // If not authenticated, explicitly clear admin session and redirect to survey with login modal
-        if (!$isAuthenticated) {
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-            return redirect('/survey')->with('show_login_modal', true);
+        // Allow middleware to protect admin routes; if not authenticated, redirect to the admin login page
+        if ($request->session()->get('admin_authenticated') !== true) {
+            return redirect('/admin');
         }
 
         return $next($request);
