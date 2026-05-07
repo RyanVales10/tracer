@@ -301,14 +301,8 @@
             <img src="{{ asset('images/ADDU-SEAL-Colored.png') }}" alt="Ateneo de Davao University logo" class="hero-logo">
             <div>
                 <h1 class="title-font mt-5 text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">
-                    ADDU Alumni
                     <span class="block" style="color: #f5b800;">Tracer Study</span>
                 </h1>
-
-                <p class="mt-4 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
-                    Your story after graduation helps us improve learning, career preparation, and alumni support for future Ateneans.
-                </p>
-
                 <div class="mt-6 flex flex-wrap items-center gap-3">
                     <span class="time-chip inline-flex items-center rounded-full px-4 py-2 text-xs font-bold sm:text-sm">
                         15-20 minutes to complete
@@ -359,10 +353,10 @@
                         The collected data shall be used solely for:
                     </p>
                     <ul class="list-disc space-y-1 pl-5">
-                        <li>alumni tracking and employability assessment,</li>
-                        <li>curriculum improvement and academic research,</li>
-                        <li>institutional accreditation and quality assurance,</li>
-                        <li>statistical analysis and reporting purposes.</li>
+                        <li>1. Alumni tracking and employability assessment</li>
+                        <li>2. Curriculum improvement and academic research</li>
+                        <li>3. Institutional accreditation and quality assurance</li>
+                        <li>4. Statistical analysis and reporting purposes</li>
                     </ul>
                     <p>
                         Your personal information shall be treated with strict confidentiality and protected through appropriate organizational, physical, and technical security measures.
@@ -374,9 +368,9 @@
                         By clicking the <span class="font-semibold">Start Survey</span> button you confirm that:
                     </p>
                     <ul class="list-disc space-y-1 pl-5">
-                        <li>the information you provided is true and accurate;</li>
-                        <li>you voluntarily consent to the collection and processing of your data;</li>
-                        <li>you understand your rights under the Data Privacy Act, including the right to access, correct, and withdraw your information.</li>
+                        <li>1. The information you provided is true and accurate</li>
+                        <li>2. You voluntarily consent to the collection and processing of your data</li>
+                        <li>3. You understand your rights under the Data Privacy Act, including the right to access, correct, and withdraw your information</li>
                     </ul>
                     <p class="text-xs text-muted sm:text-sm">
                         This consent is required before proceeding to the survey.
@@ -426,13 +420,6 @@
                     <span class="font-bold" style="color: #11243f;">Ateneo Jacket</span>.
                 </p>
             </article>
-
-            <div class="privacy-panel mt-4 rounded-2xl p-4">
-                <p class="text-sm leading-relaxed text-muted">
-                    <span class="font-bold" style="color: #003a8c;">Privacy Note:</span>
-                    All responses are collected anonymously and will be used solely for research and institutional improvement purposes.
-                </p>
-            </div>
 
             <div class="timeline-shell mt-4">
                 <h3 class="title-font text-2xl font-bold text-main">What to Expect</h3>
