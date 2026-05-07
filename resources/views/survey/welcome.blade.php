@@ -82,6 +82,9 @@
         background: #ffffff;
         border: 1px solid #d8e3f7;
         box-shadow: 0 16px 36px rgba(17, 36, 63, 0.14);
+        border-radius: 1.25rem;
+        align-self: start;
+        max-width: 460px;
     }
 
     .welcome-page .start-btn {
@@ -223,6 +226,19 @@
             grid-template-columns: 1.3fr 0.9fr;
         }
     }
+
+    .welcome-page .hero-logo {
+        position: absolute;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 160px;
+        height: auto;
+    }
+
+    @media (max-width: 640px) {
+        .welcome-page .hero-logo { display: none; }
+    }
 </style>
 
 <div class="welcome-page min-h-screen px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
@@ -231,10 +247,10 @@
         <div class="hero-glow-a"></div>
         <div class="hero-glow-b"></div>
 
-        <div class="relative grid gap-7 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:px-12 lg:py-13">
+        <div class="relative grid gap-7 px-6 py-10 sm:px-10 sm:py-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:px-12 lg:py-13">
+            <img src="{{ asset('images/addu-white-seal.png') }}" alt="Ateneo de Davao University logo" class="hero-logo">
             <div>
                 <div class="badge inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em]">
-                    Ateneo de Davao University
                 </div>
 
                 <h1 class="title-font mt-5 text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">
@@ -256,7 +272,7 @@
                 </div>
             </div>
 
-            <aside class="action-card rounded-2xl p-5 sm:p-6">
+            <aside class="action-card rounded-2xl p-5 sm:p-6 self-start">
                 <h2 class="title-font text-xl font-bold text-main sm:text-2xl">Ready to begin?</h2>
                 <p class="mt-2 text-sm leading-relaxed text-muted sm:text-base">
                     Please answer as honestly as possible. Your response is valuable and treated with confidentiality.
