@@ -10,6 +10,10 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
+        if (session('admin_authenticated')) {
+            return redirect('/admin/dashboard');
+        }
+
         return view('admin.login');
     }
 
@@ -34,7 +38,7 @@ class LoginController extends Controller
 
         $request->session()->put('admin_authenticated', true);
 
-        return redirect('/admin');
+        return redirect('/admin/dashboard');
     }
 
     public function logout(Request $request)

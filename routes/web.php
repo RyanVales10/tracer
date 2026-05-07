@@ -27,7 +27,7 @@ Route::get('/admin', [\App\Http\Controllers\Auth\LoginController::class, 'showLo
 
 // Protected admin routes (require admin middleware)
 Route::middleware('admin')->prefix('admin')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/responses', [AdminController::class, 'responses']);
     Route::get('/responses/{id}/details', [AdminController::class, 'responseDetails']);
     Route::get('/export-csv', [AdminController::class, 'exportCsv']);
