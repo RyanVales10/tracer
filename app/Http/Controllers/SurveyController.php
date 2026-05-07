@@ -14,12 +14,19 @@ class SurveyController extends Controller
 {
     public function welcome()
     {
+        if (session('survey_started')) {
+            return redirect('/survey');
+        }
+
         return view('survey.welcome');
     }
 
     public function index()
     {
         try {
+            // Mark that the user has started the survey so they cannot return to welcome
+            session(['survey_started' => true]);
+
             $categories = Category::with('questions.answers')->orderBy('order')->get();
             $this->normalizePersonalInfoBirthQuestions($categories);
             return response(view('survey.index', compact('categories'))->render());
