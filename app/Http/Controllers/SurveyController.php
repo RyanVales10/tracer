@@ -14,9 +14,8 @@ class SurveyController extends Controller
 {
     public function welcome()
     {
-        if (session('survey_started')) {
-            return redirect('/survey');
-        }
+        // Always show welcome page when explicitly accessed; clear any stale session flag
+        session()->forget('survey_started');
 
         // Prevent cached welcome page from being shown when user navigates back
         return response(view('survey.welcome'))
