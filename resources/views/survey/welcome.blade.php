@@ -460,7 +460,7 @@
                 <div class="mt-4">
                     <details class="faq-item" open>
                         <summary>Are my answers anonymous?</summary>
-                        <p>Yes. Responses are used for institutional research and reporting, and are handled confidentially.</p>
+                        <p>No. However, responses are used for institutional research and reporting, and are handled confidentially.</p>
                     </details>
                     <details class="faq-item">
                         <summary>Can I pause and continue later?</summary>
