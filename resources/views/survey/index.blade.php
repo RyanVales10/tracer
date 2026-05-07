@@ -1036,6 +1036,35 @@ function surveyApp() {
         },
 
         nextSection() {
+            // Validate required questions in current section before proceeding
+            const missing = [];
+            for (const question of this.visibleQuestions) {
+                if (!question.required || question.type === 'display') continue;
+
+                const val = this.formData[question.id];
+                let answered = false;
+
+                if (question.type === 'checkbox') {
+                    answered = Array.isArray(val) && val.length > 0;
+                } else if (question.type === 'radio' || question.type === 'select') {
+                    answered = val !== undefined && val !== null && String(val).trim() !== '';
+                } else if (question.type === 'repeating_text') {
+                    const count = this.getRepeatingCount(question);
+                    answered = Array.isArray(val) && val.length === count && val.every(v => (v !== null && String(v).trim() !== ''));
+                } else {
+                    answered = val !== undefined && val !== null && String(val).trim() !== '';
+                }
+
+                if (!answered) {
+                    missing.push(question.text || 'Unnamed question');
+                }
+            }
+
+            if (missing.length > 0) {
+                alert('Please answer the required questions before continuing:\n\n' + missing.map(m => '- ' + m).join('\n'));
+                return;
+            }
+
             if (this.currentSection < this.totalSections) {
                 this.currentSection++;
                 window.scrollTo({ top: 0, behavior: 'instant' });
