@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminAccount;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -13,6 +15,7 @@ class LoginController extends Controller
         // Always show the admin login screen when /admin is accessed.
         // Clear any prior admin authentication so that the user must re-enter credentials.
         session()->forget('admin_authenticated');
+        session()->forget('admin_account_id');
         return view('admin.login');
     }
 
@@ -23,19 +26,20 @@ class LoginController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $email    = strtolower(trim($request->input('email')));
+        $email = strtolower(trim($request->input('email')));
         $password = $request->input('password');
 
-        $validEmail    = strtolower(trim(env('ADMIN_EMAIL', '')));
-        $validPassword = env('ADMIN_PASSWORD', '');
+        $adminAccount = AdminAccount::whereRaw('lower(email) = ?', [$email])->first();
 
-        if ($email !== $validEmail || $password !== $validPassword) {
+        if (! $adminAccount || ! Hash::check($password, $adminAccount->password)) {
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
         }
 
+        $request->session()->regenerate();
         $request->session()->put('admin_authenticated', true);
+        $request->session()->put('admin_account_id', $adminAccount->id);
 
         return redirect('/admin/dashboard');
     }
@@ -43,6 +47,7 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $request->session()->forget('admin_authenticated');
+        $request->session()->forget('admin_account_id');
 
         return redirect('/');
     }

@@ -6,6 +6,7 @@
 <div class="min-h-screen flex items-center justify-center bg-gray-50">
     <div class="w-full max-w-md p-6 bg-white rounded-xl shadow">
         <h2 class="text-2xl font-bold text-[#003087] mb-4">Admin Login</h2>
+        <p class="mb-4 text-sm text-gray-600">Use the registered admin account to sign in.</p>
         @if ($errors->any())
             <div class="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
                 <ul class="space-y-1">

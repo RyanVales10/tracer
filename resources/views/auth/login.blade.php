@@ -54,7 +54,7 @@
                             <input type="checkbox" name="remember" class="h-4 w-4 rounded border-gray-300 text-[#003087] focus:ring-[#003087]">
                             Remember me
                         </label>
-                        <span>Use Supabase Auth credentials for login.</span>
+                        <span>Use the registered admin account for login.</span>
                     </div>
 
                     <button type="submit" class="w-full rounded-2xl bg-[#003087] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#002366]">
